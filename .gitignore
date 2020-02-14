@@ -1,0 +1,6 @@
+#Terraform files
+*.out
+*.tfstate
+*.tfstate.backup
+.terraform/
+main.tf
