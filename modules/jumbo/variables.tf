@@ -69,3 +69,30 @@ variable "reuse_nat_ips" {
     type        = bool
     default     = true # <= Skip creation of EIPs for the NAT Gateways
 }
+
+#Security
+#TODO Expand to directly take a security group ID. This currently assumes you know the VPC and you know a security group exists but do not have the id at hand
+variable "existing_security_group" {
+    description = "Leave blank to create a new security group. Otherwise it will use the VPC id to find an associated security group"
+    default = []
+}
+
+variable "ingress_rules" {
+    description = "Required when creating new security groups"
+    default = ["https-443-tcp", "http-80-tcp", "http-8080-tcp"]
+}
+
+variable "ingress_cidr_blocks" {
+    description = "Required when creating new security groups"
+    default = ["0.0.0.0/0"]
+}
+
+variable "egress_rules" {
+    description = "Required when creating new security groups"
+    default = ["https-443-tcp", "http-80-tcp", "http-8080-tcp", "mssql-tcp"]
+}
+
+variable "egress_cidr_blocks" {
+    description = "Required when creating new security groups"
+    default = ["0.0.0.0/0"]
+}

@@ -9,3 +9,7 @@ output "vpc_public_subents" {
 output "vpc_private_subents" {
     value = module.jumbo_vpc.vpc_private_subents
 }
+
+output "security_group_id" {
+    value = module.security_group.security_group_id
+}

@@ -28,7 +28,12 @@ module "vpc" {
 
   external_nat_ip_ids = aws_eip.nat.*.id # <= IPs specified here as input to the module
 
-  tags = local.vpc_tags
+  tags = {
+    Terraform   = "true"
+    Application = var.app_name
+    Owner       = length(var.owners) == 0 ? "Terraform": var.owners[0]
+    Project     = length(var.projects) == 0 ? "Terraform-${var.app_name}": var.projects[0]
+  }
 }
 
 # Existing VPC
