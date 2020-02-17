@@ -5,7 +5,7 @@ A jumbo teraform module designed with the ability to create custom fully built a
 - VPC
 - Security group
 - ~~Autoscaling groups~~
-- ~~ECS Cluster (EC2)~~
+- ECS Cluster (EC2)
 - ~~ECS Cluster (Fargate)~~
 - ~~Lambda~~
 - ~~SSM Parameter store variables~~
