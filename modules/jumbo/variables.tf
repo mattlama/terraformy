@@ -229,3 +229,29 @@ variable "existing_parameter_store_name" {
   description = "Existing Parameter Store Parameter name. Will attempt to return its value"
   default     = []
 }
+
+#S3 
+variable "existing_s3_bucket" {
+  description = "Existing S3 bucket name"
+  default     = []
+}
+
+variable "create_s3" {
+  description = "Whether or not to create an s3 bucket. Give it any value. Will not create a new S3 bucket if existing_s3_bucket is also set"
+  default     = false
+}
+
+variable "existing_s3_object" {
+  description = "Existing S3 object"
+  default     = []
+}
+
+variable "s3_object_keys" {
+  description = "Object keys for the objects we want to create. Must match s3_object_locations"
+  default     = []
+}
+
+variable "s3_object_locations" {
+  description = "locations of the files we want to create in s3. Must match s3_object_keys"
+  default     = []
+}
