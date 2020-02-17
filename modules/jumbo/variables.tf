@@ -202,3 +202,30 @@ variable "asg_existing_iam_role" {
   description = "Use an existing AWS IAM role for the ASG rather than create a new one. Pass in the arn of the existing AWS IAM role here" 
   default     = []
 }
+
+#Parameter Store
+#NOTE Must have values for same parameter in same order for all 4 fields
+variable "parameter_store_names" {
+  description = "The Parameter Store Parameters we will be creating"
+  default     = []
+}
+
+variable "parameter_store_descriptions" {
+  description = "The Parameter Store Parameters we will be creating"
+  default     = []
+}
+
+variable "parameter_store_types" {
+  description = "The Parameter Store Parameters we will be creating"
+  default     = []
+}
+
+variable "parameter_store_values" {
+  description = "The Parameter Store Parameters we will be creating"
+  default     = []
+}
+
+variable "existing_parameter_store_name" {
+  description = "Existing Parameter Store Parameter name. Will attempt to return its value"
+  default     = []
+}

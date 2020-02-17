@@ -4,11 +4,11 @@ A jumbo teraform module designed with the ability to create custom fully built a
 ## Components which can be created
 - VPC
 - Security group
-- ~~Autoscaling groups~~
+- Autoscaling groups
 - ECS Cluster (EC2)
 - ~~ECS Cluster (Fargate)~~
 - ~~Lambda~~
-- ~~SSM Parameter store variables~~
+- SSM Parameter store parameters
 - ~~S3 bucket/object~~
 
 Functionality will be limited at first to components which I have already used

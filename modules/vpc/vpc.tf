@@ -38,7 +38,7 @@ module "vpc" {
 
 # Existing VPC
 data "aws_vpc" "existing" {
-    count = length(var.existing_vpcs)
+    count = length(var.existing_vpcs) > 0 ? 1: 0
     id    = var.existing_vpcs[0]
 }
 
@@ -47,7 +47,7 @@ data "aws_subnet_ids" "public" {
   vpc_id = data.aws_vpc.existing[0].id
   filter {
     name = "tag:Name"
-    values = ["${var.app_name}_VPC-public", "${var.app_name}_VPC-public-*"]
+    values = ["*public*"]
   }
 }
 
@@ -56,7 +56,7 @@ data "aws_subnet_ids" "private" {
   vpc_id = data.aws_vpc.existing[0].id
   filter {
     name = "tag:Name"
-    values = ["${var.app_name}_VPC-private", "${var.app_name}_VPC-private-*"]
+    values = ["*private*"]
   }
 }
 

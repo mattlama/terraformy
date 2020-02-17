@@ -26,5 +26,5 @@ module "security_group" {
 
 data "aws_security_group" "existing" {
     count = length(var.existing_security_group) > 0 ? 1: 0
-    vpc_id = var.vpc_id
+    id    = var.existing_security_group[0]
 }
