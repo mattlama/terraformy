@@ -26,7 +26,7 @@ resource "aws_ecs_task_definition" "app" {
   family                   = "${var.app_name}"
   execution_role_arn       = var.execution_role_arn //aws_iam_role.ecs_task_execution_role.arn
   network_mode             = "awsvpc"
-  requires_compatibilities = [var.ecs_cluster_type]
+  requires_compatibilities = [var.ecs_ec2_container[0]]
   memory                   = var.provisioned_memory
   container_definitions    = data.template_file.ecs[0].rendered
 }
@@ -37,7 +37,7 @@ resource "aws_ecs_service" "main" {
   cluster         = aws_ecs_cluster.main[0].id
   task_definition = aws_ecs_task_definition.app[0].arn
   desired_count   = var.container_count
-  launch_type     = var.ecs_cluster_type
+  launch_type     = var.ecs_ec2_container[0]
 
   network_configuration {
     security_groups = [var.security_group_id]
@@ -112,7 +112,7 @@ resource "aws_autoscaling_group" "asg" {
   desired_capacity     = "${var.asg_desired_size}"
 
   health_check_grace_period = 300
-  health_check_type         = var.ecs_cluster_type
+  health_check_type         = var.ecs_ec2_container[0]
 
   lifecycle {
     create_before_destroy = true

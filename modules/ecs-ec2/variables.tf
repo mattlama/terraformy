@@ -2,6 +2,10 @@ variable "app_name" {
     description = "Required if creating new VPC. This is the app name which will be used in the creation of all components in this outline"
 }
 
+variable "ecs_ec2_container" {
+  description = "Assign a value here and the script will generate an ecs ec2 container for each element added. Values should be 'FARGATE' or 'EC2'"
+}
+
 variable "create" {
     description = "This is a toggle to allow for the resources named here to not get created when we do not want them to"
     default     = false
@@ -70,6 +74,6 @@ variable "asg_desired_size" {
   description = "Desired number of instances"
 }
 
-variable "ecs_cluster_type" {
-  description = "Type of ECS Cluster. Values are 'FARGATE' or 'EC2'"
-}
+# variable "ecs_cluster_type" {
+#   description = "Type of ECS Cluster. Values are 'FARGATE' or 'EC2'"
+# }

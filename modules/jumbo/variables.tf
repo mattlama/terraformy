@@ -99,7 +99,7 @@ variable "egress_cidr_blocks" {
 
 #ECS-EC2
 variable "ecs_ec2_container" {
-  description = "Assign a value here and the script will generate an ecs ec2 container for each element added"
+  description = "Assign a value here and the script will generate an ecs ec2 container for each element added. Values should be 'FARGATE' or 'EC2'"
   default     = []
 }
 
@@ -157,11 +157,48 @@ variable "instance_type" {
   default     = "t2.medium"
 }
 
-variable "ecs_cluster_type" {
-  description = "Type of ECS Cluster. Values are 'FARGATE' or 'EC2'"
-  default     = "EC2"
-}
+# variable "ecs_cluster_type" {
+#   description = "Type of ECS Cluster. Values are 'FARGATE' or 'EC2'"
+#   default     = "EC2"
+# }
 
 #IAM Roles
+variable "instance_policy" {
+  description = "Default instance policy document"
+  default     = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
 
+variable "ecs_existing_iam_role" {
+  description = "Use an existing AWS IAM role for the ECS Cluster rather than create a new one. Pass in the arn of the existing AWS IAM role here" 
+  default     = []
+}
 
+variable "ec2_existing_iam_role" {
+  description = "Use an existing AWS IAM role for the EC2 Instances rather than create a new one. Pass in the name of the existing AWS IAM role here" 
+  default     = []
+}
+
+# ASG
+variable "asg_existing_ecs" {
+  description = "Use an existing ECS cluster rather than a newly created ASG. Pass in the name of the existing ECS cluster here"
+  default     = []
+}
+
+variable "asg_existing_iam_role" {
+  description = "Use an existing AWS IAM role for the ASG rather than create a new one. Pass in the arn of the existing AWS IAM role here" 
+  default     = []
+}
