@@ -6,10 +6,11 @@ A jumbo teraform module designed with the ability to create custom fully built a
 - Security group
 - Autoscaling groups
 - ECS Cluster (EC2)
-- ~~ECS Cluster (Fargate)~~
+- ECS Cluster (Fargate)
 - Lambda
 - SSM Parameter store parameters
 - S3 bucket/object
 - ALB
+- Route53 entries
 
 Functionality will be limited at first to components which I have already used

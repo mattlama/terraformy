@@ -381,7 +381,6 @@ variable "create_alb" {
   type        = bool
 }
 
-
 variable "alb_logging_enabled" {
   description = "Toggle true to enable default logging for the alb"
   default     = false
@@ -405,4 +404,28 @@ variable "existing_certificate_arn" {
 variable "domain" {
   description = "The domain used in creation of the alb listener rules. used in the format environment-app_name-domain"
   default     = ""
+}
+
+
+#Route53
+variable "create_route53" {
+  description = "toggle true to create route53 entries for each environment"
+  default     = false
+}
+
+variable "existing_private_zone" {
+  description = "Whether or not the existing zone is private or not"
+  type        = bool
+  default     = false
+}
+
+variable "route53_record_type" {
+  description = "The type of route53 we want to create"
+  default     = "A"
+}
+
+variable "evaluate_target_health" {
+  description = "Whether or not to track target health"
+  type        = bool
+  default     = true
 }
