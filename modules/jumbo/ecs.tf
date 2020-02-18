@@ -1,10 +1,11 @@
 module "ecs_cluster" {
-  source                    = "../ecs-ec2"
-  # New ECS EC2 Cluster
+  source                    = "../ecs"
+  # New ECS Cluster
   app_name                  = var.app_name
   ecs_ec2_container         = var.ecs_ec2_container
   create                    = length(var.ecs_ec2_container) > 0 ? true: false
   app_port                  = var.app_port
+  secure_port               = var.secure_port
   aws_region                = var.aws_region
   execution_role_arn        = length(var.ecs_existing_iam_role) > 0 ? var.ecs_existing_iam_role[0]: module.ecs_iam_role.iam_role_arn
   provisioned_memory        = var.provisioned_memory
@@ -19,8 +20,11 @@ module "ecs_cluster" {
   asg_max_size              = var.asg_max_size
   asg_min_size              = var.asg_min_size
   asg_desired_size          = var.asg_desired_size
-
-  # Existing ECS EC2 Cluster
+  is_ec2                    = length(var.ecs_ec2_container) > 0 ? (var.ecs_ec2_container[0] == "EC2" ? true:false): false
+  target_group_arns         = module.jumbo_alb.target_group_arns
+  alb_listener              = module.jumbo_alb.alb_listener
+  role_policy_attachment    = module.ecs_iam_role.iam_role_policy_attachment
+  # Existing ECS Cluster
 
 }
 

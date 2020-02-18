@@ -1,36 +1,44 @@
 resource "aws_ecs_cluster" "main" {
   count = var.create ? 1 : 0
-  name = "${var.app_name}-cluster"
+  name  = var.is_ec2 ? "${var.app_name}-ec2-cluster": "${var.app_name}-fargate-cluster"
 }
 
 resource "aws_ecr_repository" "repo" {
   count = var.create ? 1 : 0
-  name = "${var.app_name}-ec2" 
+  name  = var.is_ec2 ? "${var.app_name}-ec2" : "${var.app_name}-fargate"
 }
 
 data "template_file" "ecs" {
-  count = var.create ? 1 : 0
-  template = file("./modules/templates/ecs-ec2.json.tpl")
+  count    = var.create ? 1 : 0
+  template = var.is_ec2 ? file("./modules/templates/ecs-ec2.json.tpl"): file("./modules/templates/ecs-fargate.json.tpl")
 
-  vars = {
+  vars = var.is_ec2 ? {
     app_name       = var.app_name
     app_image      = aws_ecr_repository.repo[0].repository_url
     app_port       = var.app_port
+    aws_region     = "${var.aws_region}"
+  } : {
+    app_name       = var.app_name
+    app_image      = aws_ecr_repository.repo[0].repository_url
+    app_port       = var.app_port
+    fargate_cpu    = var.fargate_cpu
+    fargate_memory = var.fargate_memory
     aws_region     = "${var.aws_region}"
   }
 }
 
 resource "aws_ecs_task_definition" "app" {
-  count = var.create ? 1 : 0
+  count                    = var.create ? 1 : 0
   family                   = "${var.app_name}"
   execution_role_arn       = var.execution_role_arn
   network_mode             = "awsvpc"
   requires_compatibilities = [var.ecs_ec2_container[0]]
+  cpu                      = var.is_ec2 ? "": var.fargate_cpu
   memory                   = var.provisioned_memory
   container_definitions    = data.template_file.ecs[0].rendered
 }
 
-resource "aws_ecs_service" "main" {
+resource "aws_ecs_service" "main_fargate" {
   count           = var.create ? length(var.environments) : 0 
   name            = "${var.app_name}-${var.environments[count.index]}"
   cluster         = aws_ecs_cluster.main[0].id
@@ -39,23 +47,38 @@ resource "aws_ecs_service" "main" {
   launch_type     = var.ecs_ec2_container[0]
 
   network_configuration {
-    security_groups = [var.security_group_id]
-    subnets         = var.public_subnets
+    security_groups  = [var.security_group_id]
+    subnets          = var.public_subnets
+    assign_public_ip = true
+  }
+  # TODO bring these services together. Make load_balancer conditional on something other than service type
+  load_balancer {
+    target_group_arn = var.target_group_arns[count.index]
+    container_name   = "${var.app_name}-app"
+    container_port   = var.app_port
   }
 
-  # load_balancer {
-  #   target_group_arn = module.alb.target_group_arns[count.index]
-  #   container_name   = "${var.app_name}-app"
-  #   container_port   = var.app_port
-  # }
 
+  depends_on = [var.alb_listener, var.role_policy_attachment]
+}
 
-  # depends_on = [aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
+resource "aws_ecs_service" "main_ec2" {
+  count           = var.create ? length(var.environments) : 0 
+  name            = "${var.app_name}-${var.environments[count.index]}"
+  cluster         = aws_ecs_cluster.main[0].id
+  task_definition = aws_ecs_task_definition.app[0].arn
+  desired_count   = var.container_count
+  launch_type     = var.ecs_ec2_container[0]
+
+  network_configuration {
+    security_groups  = [var.security_group_id]
+    subnets          = var.public_subnets
+  }
 }
 
 
 data "aws_ami" "ecs" {
-  count = var.create ? 1 : 0
+  count       = var.create ? (var.is_ec2 ? 1 : 0) : 0
   most_recent = true
 
   filter {
@@ -72,13 +95,13 @@ data "aws_ami" "ecs" {
 }
 
 resource "aws_iam_instance_profile" "instance" {
-  count = var.create ? 1 : 0
-  name = "${var.app_name}-instance-profile"
-  role = "${var.instance_role_name}"
+  count = var.create ? (var.is_ec2 ? 1 : 0) : 0
+  name  = "${var.app_name}-instance-profile"
+  role  = "${var.instance_role_name}"
 }
 
 resource "aws_launch_configuration" "instance" {
-  count = var.create ? 1 : 0
+  count                = var.create ? (var.is_ec2 ? 1 : 0) : 0
   name_prefix          = "${var.app_name}-lc"
   image_id             = "${data.aws_ami.ecs[0].id}"
   instance_type        = "${var.instance_type}"
@@ -101,7 +124,7 @@ EOF
 }
 
 resource "aws_autoscaling_group" "asg" {
-  count = var.create ? 1 : 0
+  count = var.create ? (var.is_ec2 ? 1 : 0) : 0
   name  = "${var.app_name}-asg"
 
   launch_configuration = "${aws_launch_configuration.instance[0].name}"

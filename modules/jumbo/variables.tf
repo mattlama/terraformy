@@ -108,6 +108,11 @@ variable "app_port" {
   default     = 8080
 }
 
+variable "secure_port" {
+  description = "port used for secure connections"
+  default     = 443
+}
+
 variable "aws_region" {
   description = "Required if creating a new ECS cluster. This is the region the ECS cluster will live in"
 }
@@ -367,4 +372,37 @@ variable "existing_lambda_role" {
 variable "lambda_s3_bucket" {
   description = "The bucket name of an existing bucket. Used in the case where we are not creating a new S3 bucket and do not want to reference one outside of lambda generation"
   default     = []
+}
+
+#ALB
+variable "create_alb" {
+  description = "This will create an alb when toggled true"
+  default     = false
+  type        = bool
+}
+
+
+variable "alb_logging_enabled" {
+  description = "Toggle true to enable default logging for the alb"
+  default     = false
+}
+
+variable "alb_ssl_policy" {
+  description = "The ssl policy our alb will be using"
+  default     = "ELBSecurityPolicy-2016-08"
+}
+
+variable "alb_listener_protocol" {
+  description = "The protocol the alb listener will use"
+  default     = "HTTPS"
+}
+
+variable "existing_certificate_arn" {
+  description = "Use an existing data certificate"
+  default     = [""]
+}
+
+variable "domain" {
+  description = "The domain used in creation of the alb listener rules. used in the format environment-app_name-domain"
+  default     = ""
 }

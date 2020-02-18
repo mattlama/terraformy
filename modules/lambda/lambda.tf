@@ -66,7 +66,7 @@ resource "aws_lambda_alias" "live_alias" {
   function_version = var.alias_function_version[0] 
 }
 
-data "aws_lambda_function" {
+data "aws_lambda_function" "existing"{
   count         = length(var.existing_lambda) > 0 ? 1 : 0
   function_name = var.existing_lambda[0]
 }

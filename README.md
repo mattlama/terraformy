@@ -10,5 +10,6 @@ A jumbo teraform module designed with the ability to create custom fully built a
 - Lambda
 - SSM Parameter store parameters
 - S3 bucket/object
+- ALB
 
 Functionality will be limited at first to components which I have already used
