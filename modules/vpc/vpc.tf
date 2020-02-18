@@ -59,22 +59,3 @@ data "aws_subnet_ids" "private" {
     values = ["*private*"]
   }
 }
-
-/*
-data "aws_subnet" "public" {
-  count = length(existing_vpcs)
-  vpc_id = data.aws_vpc.id
-  filter {
-    name = "tag:Name"
-    values = ["${data.aws_vpc.existing.name}-public", "${data.aws_vpc.existing.name}-public-*"]
-  }
-}
-
-data "aws_subnet" "private" {
-  count = length(existing_vpcs)
-  vpc_id = data.aws_vpc.id
-  filter {
-    name = "tag:Name"
-    values = ["${data.aws_vpc.existing.name}-private", "${data.aws_vpc.existing.name}-private-*"]
-  }
-}*/

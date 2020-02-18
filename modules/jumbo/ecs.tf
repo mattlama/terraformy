@@ -1,6 +1,6 @@
 module "ecs_cluster" {
   source                    = "../ecs-ec2"
-  #New ECS EC2 Cluster
+  # New ECS EC2 Cluster
   app_name                  = var.app_name
   ecs_ec2_container         = var.ecs_ec2_container
   create                    = length(var.ecs_ec2_container) > 0 ? true: false
@@ -20,7 +20,7 @@ module "ecs_cluster" {
   asg_min_size              = var.asg_min_size
   asg_desired_size          = var.asg_desired_size
 
-  #Existing ECS EC2 Cluster
+  # Existing ECS EC2 Cluster
 
 }
 
@@ -43,7 +43,7 @@ module "ec2_iam_role" {
   custom_policy = [var.instance_policy]
 }
 
-#NOTE we can switch to this style if we can do multiple roles at a time
+# NOTE we can switch to this style if we can do multiple roles at a time
 # module "ecs_iam_role" {
 #   source        = "../iam-role"
 #   create        = length(var.ecs_ec2_container) > 0 ? true: false

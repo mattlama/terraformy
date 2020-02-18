@@ -1,10 +1,10 @@
 variable "role_type" {
-  description = "Give either 'ECS', 'ASG', or 'EC2' as input types and roles will be created accordingly. Note at this time EC2 is the default if there is no recognized value and it requires a custom policy"
+  description = "Give either 'ECS', 'ASG', 'lambda' or 'EC2' as input types and roles will be created accordingly. Note at this time EC2 is the default if there is no recognized value and it requires a custom policy"
   default     = []
 }
 
 variable "custom_policy" {
-  description = "Pass in a custom policy document"
+  description = "Pass in a custom policy document. In the case of lambda a second one is expected. First is role, second is policy"
   default     = []
 }
 

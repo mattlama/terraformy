@@ -1,4 +1,4 @@
-#TODO Refactor this so we do not need 4 lists running side by side
+# TODO Refactor this so we do not need 4 lists running side by side
 variable "names" {
   description = "This is the key the parameter will be saved to. They should be in the same order as their values"
   default     = []

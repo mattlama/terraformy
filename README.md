@@ -7,8 +7,8 @@ A jumbo teraform module designed with the ability to create custom fully built a
 - Autoscaling groups
 - ECS Cluster (EC2)
 - ~~ECS Cluster (Fargate)~~
-- ~~Lambda~~
+- Lambda
 - SSM Parameter store parameters
-- ~~S3 bucket/object~~
+- S3 bucket/object
 
 Functionality will be limited at first to components which I have already used

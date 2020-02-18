@@ -6,7 +6,6 @@ resource "aws_ecs_cluster" "main" {
 resource "aws_ecr_repository" "repo" {
   count = var.create ? 1 : 0
   name = "${var.app_name}-ec2" 
-  //name = "playlist-adapter-mock"
 }
 
 data "template_file" "ecs" {
@@ -24,7 +23,7 @@ data "template_file" "ecs" {
 resource "aws_ecs_task_definition" "app" {
   count = var.create ? 1 : 0
   family                   = "${var.app_name}"
-  execution_role_arn       = var.execution_role_arn //aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = var.execution_role_arn
   network_mode             = "awsvpc"
   requires_compatibilities = [var.ecs_ec2_container[0]]
   memory                   = var.provisioned_memory
@@ -43,15 +42,15 @@ resource "aws_ecs_service" "main" {
     security_groups = [var.security_group_id]
     subnets         = var.public_subnets
   }
-/*
-  load_balancer {
-    target_group_arn = module.alb.target_group_arns[count.index]
-    container_name   = "${var.app_name}-app"
-    container_port   = var.app_port
-  }
+
+  # load_balancer {
+  #   target_group_arn = module.alb.target_group_arns[count.index]
+  #   container_name   = "${var.app_name}-app"
+  #   container_port   = var.app_port
+  # }
 
 
-  depends_on = [aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]*/
+  # depends_on = [aws_alb_listener.front_end, aws_iam_role_policy_attachment.ecs_task_execution_role]
 }
 
 

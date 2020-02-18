@@ -1,4 +1,4 @@
-resource "aws_ssm_parameter" "db_connection_string" {
+resource "aws_ssm_parameter" "new_parameter" {
   count       = length(var.existing_parameter) > 0 ? 0 : length(var.names)
   name        = var.names[count.index] 
   description = var.descriptions[count.index] 

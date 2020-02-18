@@ -1,5 +1,5 @@
-#There are different types of Roles with different requirements. Currently limiting Roles created at a time to 1
-#ECS task execution role data is used when creating a new role for this ecs service. We grab the existing ecs role policy document and attach it to our new role
+# There are different types of Roles with different requirements. Currently limiting Roles created at a time to 1
+# ECS task execution role data is used when creating a new role for this ecs service. We grab the existing ecs role policy document and attach it to our new role
 data "aws_iam_policy_document" "role_document" {
   count   = length(var.role_type) > 0 ? (length(var.custom_policy) > 0 ? 0: 1) : 0
   version = "2012-10-17"
@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "role_document" {
   }
 }
 
-#New elements
+# New elements
 resource "aws_iam_role" "new_role" {
   count              = length(var.role_type) > 0 ? 1 : 0
   name               = var.role_type[0] == "ECS" ? "${var.app_name}-task-role": (var.role_type[0] == "ASG" ? "${var.app_name}-auto-scale-role": "${var.app_name}-instance-role") 
@@ -28,9 +28,18 @@ resource "aws_iam_role" "new_role" {
   }
 }
 
-#Role policy attachment
+resource "aws_iam_policy" "lambda_policy" {
+  count       = length(var.role_type) > 0 ? (var.role_type[0] == "lambda" ? 1 : 0) : 0
+  name        = "${var.app_name}_lambda_policy"
+  path        = "/"
+  description = "IAM policy for logging from a lambda and ssm get"
+
+  policy = var.custom_policy[1]
+}
+
+# Role policy attachment
 resource "aws_iam_role_policy_attachment" "role_attachment" {
   count      = length(var.role_type) > 0 ? 1 : 0
   role       = aws_iam_role.new_role[0].name
-  policy_arn = var.role_type[0] == "ECS" ? "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy": (var.role_type[0] == "ASG" ? "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole": "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role")
+  policy_arn = var.role_type[0] == "ECS" ? "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy": (var.role_type[0] == "ASG" ? "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole": (var.role_type[0] == "lambda" ? aws_iam_policy.lambda_policy[0].arn : "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"))
 }

@@ -53,7 +53,7 @@ variable "instance_type" {
     description = "The type of EC2 instance we want to use"
 }
 
-#TODO Create a new key pair as needed rather than require existing key pair to get passed in
+# TODO Create a new key pair as needed rather than require existing key pair to get passed in
 variable "key_pair" {
     description = "The AWS key pair we will be using"
 }

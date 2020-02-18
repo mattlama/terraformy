@@ -1,6 +1,6 @@
 # TODO Add in tag mapping
 locals {
-  common_tags = {
+  lambda_tags = {
     Terraform   = "true"
     Application = var.app_name
     Owner       = length(var.owners) == 0 ? "Terraform": var.owners[0]

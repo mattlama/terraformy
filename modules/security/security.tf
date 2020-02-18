@@ -15,7 +15,7 @@ module "security_group" {
   egress_rules        = ["https-443-tcp", "http-80-tcp", "http-8080-tcp", "mssql-tcp"]
   egress_cidr_blocks  = ["0.0.0.0/0"]
 
-  //vpc_id  = data.aws_vpc.selected.id
+  # vpc_id  = data.aws_vpc.selected.id
   tags = {
     Terraform   = "true"
     Application = var.app_name

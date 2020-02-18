@@ -6,7 +6,7 @@ variable "vpc_id" {
     description = "Required. This is the VPC the security group will belong to"
 }
 
-#TODO Expand to directly take a security group ID. This currently assumes you know the VPC and you know a security group exists but do not have the id at hand
+# TODO Expand to directly take a security group ID. This currently assumes you know the VPC and you know a security group exists but do not have the id at hand
 variable "existing_security_group" {
     description = "Leave blank to create a new security group. Otherwise it will use the VPC id to find an associated security group"
 }

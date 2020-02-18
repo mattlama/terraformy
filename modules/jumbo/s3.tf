@@ -1,4 +1,4 @@
-module "s3" {
+module "s3_bucket" {
   source          = "../s3-bucket"
   create          = var.create_s3
   existing_bucket = var.existing_s3_bucket
@@ -7,9 +7,9 @@ module "s3" {
   projects        = var.projects
 }
 
-module "s3-object" {
+module "s3_object" {
   source             = "../s3-object"
-  s3_bucket          = module.s3.bucket_name
+  s3_bucket          = module.s3_bucket.bucket_name
   s3_keys            = var.s3_object_keys
   s3_filepaths       = var.s3_object_locations
   existing_s3_object = var.existing_s3_object

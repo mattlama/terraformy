@@ -71,7 +71,7 @@ variable "reuse_nat_ips" {
 }
 
 #Security
-#TODO Expand to directly take a security group ID. This currently assumes you know the VPC and you know a security group exists but do not have the id at hand
+# TODO Expand to directly take a security group ID. This currently assumes you know the VPC and you know a security group exists but do not have the id at hand
 variable "existing_security_group" {
   description = "Leave blank to create a new security group. Otherwise it will use the VPC id to find an associated security group"
   default     = []
@@ -127,7 +127,7 @@ variable "container_count" {
   default     = 3
 }
 
-#TODO Create a new key pair as needed rather than require existing key pair to get passed in
+# TODO Create a new key pair as needed rather than require existing key pair to get passed in
 variable "key_pair" {
   description = "The AWS key pair we will be using"
 }
@@ -204,7 +204,7 @@ variable "asg_existing_iam_role" {
 }
 
 #Parameter Store
-#NOTE Must have values for same parameter in same order for all 4 fields
+# NOTE Must have values for same parameter in same order for all 4 fields
 variable "parameter_store_names" {
   description = "The Parameter Store Parameters we will be creating"
   default     = []
@@ -253,5 +253,118 @@ variable "s3_object_keys" {
 
 variable "s3_object_locations" {
   description = "locations of the files we want to create in s3. Must match s3_object_keys"
+  default     = []
+}
+
+#lambda
+variable "lambda_role_policy" {
+  description = "Default instance policy document"
+  default     = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+variable "lambda_policy" {
+  description = "Default custom lambda policy"
+  default     = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "ssm:GetParameters",
+        "ssm:GetParametersByPath",
+        "ec2:DescribeInstances",
+        "ec2:CreateNetworkInterface",
+        "ec2:DeleteNetworkInterface",
+        "ec2:AttachNetworkInterface",
+        "ec2:DescribeNetworkInterfaces",
+        "kms:Decrypt"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+variable "lambda_cloudwatch_logging_retention_in_days" {
+  description = "How long to retain cloudwatch logs"
+  default     = 14
+}
+
+variable "alias_name" {
+  description = "Name for an alias for our lambda function"
+  default     = ["live"]
+}
+
+variable "alias_function_version" {
+  description = "The version we want our function alias to use"
+  default     = ["1"]
+}
+
+variable "schedule_expression" {
+  description = "The schedule expression used in our cloudwatch event rule"
+  default     = "rate(1 minute)"
+}
+
+variable "lambda_timeout" {
+  description = "The timeout for the lambda function"
+  default     = 20
+}
+
+variable "handler" {
+  description = "The handler our lambda will use"
+  default     = "main"
+}
+
+variable "lambda_runtime" {
+  description = "The runtime environment for our lambda"
+  default     = "go1.x"
+}
+
+variable "lambda_s3_key" {
+  description = "The key of the build file for our lambda expression in s3"
+  default     = ""
+}
+
+variable "lambda_cloudwatch_logging" {
+  description = "When true will create cloudwatch logging for our lambda function"
+  default     = false
+}
+
+variable "create_lambda" {
+  description = "When true will create a lambda function"
+  default     = false
+}
+
+variable "existing_lambda" {
+  description = "If we want to add cloudwatch logging to an existing lambda functino rather than creating a new one give the function arn here"
+  default     = []
+}
+
+variable "existing_lambda_role" {
+  description = "If we have an existing iam role we want to use for our lambda function pass in the role policy here"
+  default     = []
+}
+
+variable "lambda_s3_bucket" {
+  description = "The bucket name of an existing bucket. Used in the case where we are not creating a new S3 bucket and do not want to reference one outside of lambda generation"
   default     = []
 }
