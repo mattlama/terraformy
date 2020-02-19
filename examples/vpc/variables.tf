@@ -1,6 +1,5 @@
 variable "existing_vpc_id" {
     description = "The id of an existing VPC we want to use"
-    default     = "vpc-0c1607ddd65b9949c"
 }
 
 variable "app_name" {

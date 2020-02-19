@@ -19,7 +19,7 @@ module "terraformy_existing" {
 
     #Security
 
-    existing_security_group = [var.existing_security_group] # Note it will use whatever security group if provided/created
+    existing_security_group = [var.existing_security_group_id] # Note it will use whatever security group if provided/created
 
     #ECS
     ecs_container = ["EC2"] # Choices are EC2 or FARGATE. Leave blank if no ECS cluster is desired
