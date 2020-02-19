@@ -2,6 +2,14 @@ variable "existing_vpc_id" {
     description = "The id of an existing VPC we want to use"
 }
 
+variable "existing_security_group_id" {
+    description = "The id of an existing VPC we want to use"
+}
+
+variable "domain" {
+    description = "The domain we want to use for our new route53 entries"
+}
+
 variable "app_name" {
     description = "This is the app name which will be used in the creation of all components in this outline. NOTE AWS has limitations on certain components such as 32 characters in length or must be all lowercase for ecr repositories"
     default     = "test-app"

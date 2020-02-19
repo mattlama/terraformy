@@ -1,4 +1,4 @@
-# For now we are limiting the number of VPCs created at a time to 1 per jumbo as the purpose is to package all the jumbo components together
+# For now we are limiting the number of VPCs created at a time to 1 as the purpose is to package all the components together
 
 # New VPC
 # Refer here for documentation

@@ -1,5 +1,5 @@
 # terraformy
-A jumbo teraform module designed with the ability to create custom fully built aws infrastructure
+A large terraform module designed with the ability to create custom fully built aws infrastructure
 
 ## Components which can be created
 - VPC

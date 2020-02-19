@@ -1,4 +1,4 @@
-# For now we are limiting the number of Security Groups created at a time to 1 per jumbo
+# For now we are limiting the number of Security Groups created at a time to 1
 
 # Refer here for documentation
 # https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws/3.1.0

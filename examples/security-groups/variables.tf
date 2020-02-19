@@ -8,7 +8,7 @@ variable "existing_security_group_id" {
 
 variable "app_name" {
     description = "This is the app name which will be used in the creation of all components in this outline. NOTE AWS has limitations on certain components such as 32 characters in length or must be all lowercase for ecr repositories"
-    default     = "test_vpc"
+    default     = "test-app"
 }
 
 variable "aws_region" {

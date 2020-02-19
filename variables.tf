@@ -1,4 +1,3 @@
-#Jumbo
 variable "app_name" {
   description = "Required. This is the app name which will be used in the creation of all components in this outline. NOTE AWS has limitations on certain components such as 32 characters in length or must be all lowercase for ecr repositories"
 }

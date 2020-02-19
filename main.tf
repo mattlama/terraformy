@@ -1,12 +1,12 @@
 #ALB
-module "jumbo_alb" {
+module "alb" {
   source = "./modules/alb"
   create_alb            = var.create_alb
   environments          = var.environments
-  public_subnets        = module.jumbo_vpc.vpc_public_subents
+  public_subnets        = module.vpc.vpc_public_subents
   app_name              = var.app_name
   security_group_id     = module.security_group.security_group_id
-  vpc_id                = module.jumbo_vpc.vpc_id
+  vpc_id                = module.vpc.vpc_id
   logging_enabled       = var.alb_logging_enabled
   owners                = var.owners
   projects              = var.projects
@@ -29,7 +29,7 @@ module "jumbo_alb" {
 module "asg" {
   source                    = "./modules/auto-scaling-group"
   app_name                  = var.app_name
-  create                    = length(var.ecs_container) > 0 ? (var.ecs_container[0] == "EC2" ? true: false): false
+  create                    = length(var.ecs_container) > 0 ? true: false
   environments              = var.environments
   ecs_cluster_name          = length(var.asg_existing_ecs) > 0 ? var.asg_existing_ecs[0]: module.ecs_cluster.ecs_cluster_name
   auto_scaling_role_iam_arn = length(var.asg_existing_iam_role) > 0 ? var.asg_existing_iam_role[0]: module.asg_iam_role.iam_role_arn
@@ -62,7 +62,7 @@ module "ecs_cluster" {
   environments              = var.environments
   container_count           = var.container_count
   security_group_id         = module.security_group.security_group_id
-  public_subnets            = module.jumbo_vpc.vpc_public_subents
+  public_subnets            = module.vpc.vpc_public_subents
   instance_role_name        = length(var.ec2_existing_iam_role) > 0 ? var.ec2_existing_iam_role[0]: module.ec2_iam_role.iam_role_name
   instance_type             = var.instance_type
   key_pair                  = var.key_pair
@@ -71,8 +71,8 @@ module "ecs_cluster" {
   asg_min_size              = var.asg_min_size
   asg_desired_size          = var.asg_desired_size
   is_ec2                    = length(var.ecs_container) > 0 ? (var.ecs_container[0] == "EC2" ? true:false): false
-  target_group_arns         = module.jumbo_alb.target_group_arns
-  alb_listener              = module.jumbo_alb.alb_listener
+  target_group_arns         = module.alb.target_group_arns
+  alb_listener              = module.alb.alb_listener
   role_policy_attachment    = module.ecs_iam_role.iam_role_policy_attachment
   # Existing ECS Cluster
 
@@ -89,7 +89,7 @@ module "ecs_iam_role" {
 
 module "ec2_iam_role" {
   source        = "./modules/iam-role"
-  create        = length(var.ecs_container) > 0 ? (length(var.ec2_existing_iam_role) > 0 ? false: true): false
+  create        = length(var.ecs_container) > 0 ? (length(var.ec2_existing_iam_role) > 0 ? false: (var.ecs_container[0] == "EC2" ? true:false)): false
   app_name      = var.app_name
   owners        = var.owners
   projects      = var.projects
@@ -121,7 +121,7 @@ module "lambda" {
   alias_function_version                      = var.alias_function_version
   s3_bucket                                   = length(var.lambda_s3_bucket) > 0 ? var.lambda_s3_bucket[0] : module.s3_bucket.bucket_name
   s3_key                                      = var.lambda_s3_key
-  private_subnets                             = module.jumbo_vpc.vpc_private_subents
+  private_subnets                             = module.vpc.vpc_private_subents
   security_group_id                           = module.security_group.security_group_id
   lambda_runtime                              = var.lambda_runtime
   lambda_iam_role_arn                         = module.lambda_iam_role.iam_role_arn
@@ -162,8 +162,8 @@ module "routes" {
   domain                    = var.domain
   existing_private_zone     = var.existing_private_zone
   route53_record_type       = var.route53_record_type
-  alb_dns_name              = module.jumbo_alb.dns_name
-  alb_load_balancer_zone_id = module.jumbo_alb.load_balancer_zone_id
+  alb_dns_name              = module.alb.dns_name
+  alb_load_balancer_zone_id = module.alb.load_balancer_zone_id
   evaluate_target_health    = var.evaluate_target_health
 }
 
@@ -188,7 +188,7 @@ module "s3_object" {
 #Security
 module "security_group" {
   source                  = "./modules/security"
-  vpc_id                  = module.jumbo_vpc.vpc_id
+  vpc_id                  = module.vpc.vpc_id
   app_name                = var.app_name
   existing_security_group = var.existing_security_group
   # ingress_rules           = var.ingress_rules
@@ -213,7 +213,7 @@ module "security_group" {
 }
 
 #VPC
-module "jumbo_vpc" {
+module "vpc" {
   source   = "./modules/vpc"
   app_name = var.app_name
   #Tags
