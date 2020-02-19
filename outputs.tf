@@ -13,3 +13,7 @@ output "vpc_private_subents" {
 output "security_group_id" {
     value = module.security_group.security_group_id
 }
+
+output "ecs_cluster_name" {
+    value = module.ecs_cluster.ecs_cluster_name
+}

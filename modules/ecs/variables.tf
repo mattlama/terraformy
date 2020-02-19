@@ -2,7 +2,7 @@ variable "app_name" {
     description = "Required if creating new VPC. This is the app name which will be used in the creation of all components in this outline"
 }
 
-variable "ecs_ec2_container" {
+variable "ecs_container" {
   description = "Assign a value here and the script will generate an ecs ec2 container for each element added. Values should be 'FARGATE' or 'EC2'"
 }
 

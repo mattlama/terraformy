@@ -4,7 +4,7 @@
 # Refer here for documentation
 # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/2.9.0
 resource "aws_eip" "nat" {
-  count = length(var.existing_vpcs) == 0 ? 3: 0
+  count = length(var.existing_vpcs) == 0 ? (length(var.availability_zones) + 1): 0
 
   vpc = true
 }

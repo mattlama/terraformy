@@ -4,4 +4,4 @@
 *.tfstate.backup
 .terraform/
 files/
-examples/
+*.tfvars

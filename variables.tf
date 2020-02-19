@@ -98,7 +98,7 @@ variable "egress_cidr_blocks" {
 }
 
 #ECS-EC2
-variable "ecs_ec2_container" {
+variable "ecs_container" {
   description = "Assign a value here and the script will generate an ecs ec2 container for each element added. Values should be 'FARGATE' or 'EC2'"
   default     = []
 }
@@ -135,6 +135,7 @@ variable "container_count" {
 # TODO Create a new key pair as needed rather than require existing key pair to get passed in
 variable "key_pair" {
   description = "The AWS key pair we will be using"
+  default     = ""
 }
 
 variable "instance_root_volume_size" {
