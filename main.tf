@@ -191,10 +191,6 @@ module "security_group" {
   vpc_id                  = module.vpc.vpc_id
   app_name                = var.app_name
   existing_security_group = var.existing_security_group
-  # ingress_rules           = var.ingress_rules
-  # ingress_cidr_blocks     = var.ingress_cidr_blocks
-  # egress_rules            = var.egress_rules
-  # egress_cidr_blocks      = var.egress_cidr_blocks
   owners                  = var.owners
   projects                = var.projects
   # Pass in a list of maps with fields mapped. 1 map = 1 security group to create. This way custom security groups can be set up for each environment
@@ -203,13 +199,6 @@ module "security_group" {
     "ingress_cidr_blocks" = var.ingress_cidr_blocks,
     "egress_rules" = var.egress_rules,
     "egress_cidr_blocks" = var.egress_cidr_blocks}]
-
-  /*
-  target_groups         = [
-    for e in var.environments:
-    map("name", "${e}-${var.app_name}-tg", "backend_protocol", "HTTP", "backend_port", "${var.app_port}", "target_type", "ip", "health_check_path", "/healthcheck")
-  ]  
-  */
 }
 
 #VPC

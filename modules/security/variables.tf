@@ -6,26 +6,9 @@ variable "vpc_id" {
     description = "Required. This is the VPC the security group will belong to"
 }
 
-# TODO Expand to directly take a security group ID. This currently assumes you know the VPC and you know a security group exists but do not have the id at hand
 variable "existing_security_group" {
     description = "Leave blank to create a new security group. Otherwise it will use the VPC id to find an associated security group"
 }
-
-# variable "ingress_rules" {
-#     description = "Required when creating new security groups"
-# }
-
-# variable "ingress_cidr_blocks" {
-#     description = "Required when creating new security groups"
-# }
-
-# variable "egress_rules" {
-#     description = "Required when creating new security groups"
-# }
-
-# variable "egress_cidr_blocks" {
-#     description = "Required when creating new security groups"
-# }
 
 variable "security_groups_to_create" {
     description = "A list of fields required to create the security group. In list format so many security groups can be created"
