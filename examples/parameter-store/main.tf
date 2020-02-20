@@ -58,17 +58,3 @@ module "terraformy_new" {
     #     m["value"] = element(var.hidden_values, index(var.parameter_maps, m))
     # ]
 }
-
-# Creating a new VPC will create the following:
-# VPC (1 at the moment)
-# public subnets (1 for each availability zone)
-# private subnets (1 for each availability zone)
-# public route table (1)
-# private route table (1 for each availability zone)
-# route table association (1 for each subnet)
-# public route (1)
-# private route (1 for each availability zone)
-# elastic ip (1 for public + 1 for each availability zone)
-# internet gateway (1)
-# nat gateway (1 for each availability zone)
-# For a total of 1 + 3 + 3 + 1 + 3 + 6 + 1 + 3 + 4 + 1 + 3 = 29 components created in our example

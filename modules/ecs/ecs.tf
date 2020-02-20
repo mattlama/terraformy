@@ -83,7 +83,7 @@ resource "aws_ecs_task_definition" "app" {
   count                    = var.create ? 1 : 0
   family                   = "${var.app_name}"
   execution_role_arn       = var.execution_role_arn
-  network_mode             = "awsvpc"
+  network_mode             = var.network_mode
   requires_compatibilities = [var.ecs_container[0]]
   cpu                      = var.is_ec2 ? "": var.fargate_cpu
   memory                   = var.provisioned_memory

@@ -104,3 +104,7 @@ variable "alb_listener" {
 variable "role_policy_attachment" {
   description = "The role policy attachment used by our ecs cluster when a load balancer is present"
 }
+
+variable "network_mode" {
+  description = "The network type the task definition will use"
+}

@@ -162,11 +162,6 @@ variable "instance_type" {
   default     = "t2.medium"
 }
 
-# variable "ecs_cluster_type" {
-#   description = "Type of ECS Cluster. Values are 'FARGATE' or 'EC2'"
-#   default     = "EC2"
-# }
-
 #IAM Roles
 variable "instance_policy" {
   description = "Default instance policy document"
@@ -195,6 +190,11 @@ variable "ecs_existing_iam_role" {
 variable "ec2_existing_iam_role" {
   description = "Use an existing AWS IAM role for the EC2 Instances rather than create a new one. Pass in the name of the existing AWS IAM role here" 
   default     = []
+}
+
+variable "network_mode" {
+  description = "The network type the task definition will use"
+  default     = "awsvpc"
 }
 
 # ASG
@@ -246,7 +246,7 @@ variable "existing_s3_bucket" {
   default     = []
 }
 
-variable "create_s3" {
+variable "create_s3_bucket" {
   description = "Whether or not to create an s3 bucket. Give it any value. Will not create a new S3 bucket if existing_s3_bucket is also set"
   default     = false
 }
@@ -263,6 +263,11 @@ variable "s3_object_keys" {
 
 variable "s3_object_locations" {
   description = "locations of the files we want to create in s3. Must match s3_object_keys"
+  default     = []
+}
+
+variable "s3_objects" {
+  description = "Map of the objects which need to be created. Set 'bucket' to an empty string to use the bucket coming out of the s3 module"
   default     = []
 }
 

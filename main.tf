@@ -74,6 +74,7 @@ module "ecs_cluster" {
   target_group_arns         = module.alb.target_group_arns
   alb_listener              = module.alb.alb_listener
   role_policy_attachment    = module.ecs_iam_role.iam_role_policy_attachment
+  network_mode              = var.network_mode
   # Existing ECS Cluster
 
 }
@@ -153,7 +154,8 @@ module "parameters" {
 #Routes
 module "routes" {
   source = "./modules/routes"
-  create_route53            = var.create_route53
+  create_route53            = var.create_route53 ? (var.domain == "" ? false : true): false
+  # Route53 route is environment-app_name-domain
   environments              = var.environments
   app_name                  = var.app_name
   domain                    = var.domain
@@ -167,7 +169,7 @@ module "routes" {
 #S3
 module "s3_bucket" {
   source          = "./modules/s3-bucket"
-  create          = var.create_s3
+  create          = var.create_s3_bucket
   existing_bucket = var.existing_s3_bucket
   app_name        = var.app_name
   owners          = var.owners
@@ -177,9 +179,15 @@ module "s3_bucket" {
 module "s3_object" {
   source             = "./modules/s3-object"
   s3_bucket          = module.s3_bucket.bucket_name
-  s3_keys            = var.s3_object_keys
-  s3_filepaths       = var.s3_object_locations
   existing_s3_object = var.existing_s3_object
+  s3_objects         = [
+    for o in var.s3_objects:
+    {
+      "bucket"   = o["bucket"] == "" ? module.s3_bucket.bucket_name: o["bucket"],
+      "key"      = o["key"],
+      "filepath" = o["filepath"]
+    }
+  ]
 }
 
 #Security
