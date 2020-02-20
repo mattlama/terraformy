@@ -235,6 +235,11 @@ variable "existing_parameter_store_name" {
   default     = []
 }
 
+variable "parameters" {
+  description = "Takes a slice of maps with name, description, type, and value fields"
+  default     = []
+}
+
 #S3 
 variable "existing_s3_bucket" {
   description = "Existing S3 bucket name"
