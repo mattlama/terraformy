@@ -109,6 +109,17 @@ module "ec2_iam_role" {
 #   custom_policy = var.ecs_container[0] == "EC2" ? [var.instance_policy]: []
 # }
 
+#IAM User
+# NOTE we can only create one user as of now
+module "iam_user" {
+  source = "./modules/iam-user"
+  ecr_repository_arn = var.default_user_ecr_policy != "" ? var.default_user_ecr_policy : module.ecs_cluster.ecr_repository_arn
+  users              = var.create_iam_user ? (length(var.iam_users) > 0 ? var.iam_users: (length(var.ecs_container) > 0 ? [{"name" = "", "policies" = ["ECR", "ECS"]}]: [{"name" = "", "policies" = []}])): []
+  app_name           = var.app_name
+  owners             = var.owners
+  projects           = var.projects
+}
+
 #lambda
 module "lambda" {
   source = "./modules/lambda"

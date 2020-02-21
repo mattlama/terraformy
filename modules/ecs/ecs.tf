@@ -11,7 +11,7 @@ resource "aws_ecr_repository" "repo" {
 data "template_file" "ecs" {
   count    = var.create ? 1 : 0
   # template = var.is_ec2 ? file("./modules/templates/ecs-ec2.json.tpl"): file("./modules/templates/ecs-fargate.json.tpl")
-  # TODO Improve data templates
+  # TODO Improve data templates. Network_mode should be awsvpc in the case of an alb and bridge when not
   template = var.is_ec2 ? (<<EOF
 [
   {
@@ -98,6 +98,7 @@ resource "aws_ecs_service" "main_fargate" {
   desired_count   = var.container_count
   launch_type     = var.ecs_container[0]
 
+  # Network configuration only needs to exist when 'awsvpc' is the value of the ecs_task_role.network_mode
   network_configuration {
     security_groups  = [var.security_group_id]
     subnets          = var.public_subnets

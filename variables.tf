@@ -439,3 +439,37 @@ variable "evaluate_target_health" {
   type        = bool
   default     = true
 }
+
+#IAM-User
+variable "default_user_ecs_policy" {
+  description = "The policy which will be used when a user is created and asks for an 'ECS' policy"
+  default     = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
+
+variable "default_user_ecr_policy" {
+  description = "The policy which will be used when a user is created and asks for an 'ECS' policy and needs ECR access"
+  default     = ""
+}
+
+variable "create_iam_user" {
+  description = "toggle this to true if you want an iam user created"
+  type        = bool
+  default     = false
+}
+
+variable "iam_users" {
+  description = "a slice of maps which will contain the fields 'name' and 'policies' where policies is a slice which values can currently can be 'ECR' or 'ECS'. Will only be used when create_iam_user is true"
+  default     = []
+}
