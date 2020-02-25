@@ -16,8 +16,8 @@ resource "aws_iam_access_key" "user" {
 
 module "iam_user_policies" {
   source = "../iam-user-policy"
-  user               = lookup(var.users[0], "name", "")
-  user_policies      = lookup(var.users[0], "policies", [])
+  user               = length(var.users) > 0 ? lookup(var.users[0], "name", ""): ""
+  user_policies      = length(var.users) > 0 ? lookup(var.users[0], "policies", []): []
   ecr_repository_arn = var.ecr_repository_arn
   app_name           = var.app_name
 }

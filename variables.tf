@@ -97,8 +97,8 @@ variable "egress_cidr_blocks" {
 }
 
 #ECS-EC2
-variable "ecs_container" {
-  description = "Assign a value here and the script will generate an ecs ec2 container for each element added. Values should be 'FARGATE' or 'EC2'"
+variable "ecs_type" {
+  description = "Assign a value here and the script will generate an ecs cluster for each element added. Values should be 'FARGATE' or 'EC2'"
   default     = []
 }
 

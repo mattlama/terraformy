@@ -11,7 +11,7 @@ resource "aws_eip" "nat" {
 
 # Create a new VPC which is managed by terraform
 module "vpc" {
-  create_vpc      = length(var.existing_vpcs) == 0 ? true: false
+  create_vpc      = length(var.existing_vpcs) > 0 ? false: true
   source          = "terraform-aws-modules/vpc/aws"
   version         = "2.9.0"
   name            = "${var.app_name}_VPC"
@@ -38,12 +38,12 @@ module "vpc" {
 
 # Existing VPC
 data "aws_vpc" "existing" {
-    count = length(var.existing_vpcs) > 0 ? 1: 0
+    count = length(var.existing_vpcs) > 0 ? (var.existing_vpcs[0] == "" ? 0: 1): 0
     id    = var.existing_vpcs[0]
 }
 
 data "aws_subnet_ids" "public" {
-  count = length(var.existing_vpcs)
+  count = length(var.existing_vpcs) > 0 ? (var.existing_vpcs[0] == "" ? 0: length(var.existing_vpcs)): 0
   vpc_id = data.aws_vpc.existing[0].id
   filter {
     name = "tag:Name"
@@ -52,7 +52,7 @@ data "aws_subnet_ids" "public" {
 }
 
 data "aws_subnet_ids" "private" {
-  count = length(var.existing_vpcs)
+  count = length(var.existing_vpcs) > 0 ? (var.existing_vpcs[0] == "" ? 0: length(var.existing_vpcs)): 0
   vpc_id = data.aws_vpc.existing[0].id
   filter {
     name = "tag:Name"

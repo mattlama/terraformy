@@ -5,7 +5,7 @@ provider "aws" {
 }
 
 # Example use existing vpc and security group with a new ecs ec2 cluster
-module "terraformy_existing" {
+module "terraformy_new" {
     source     = "../../../terraformy"
     app_name   = "${var.app_name}-old"
     aws_region = var.aws_region
@@ -22,7 +22,7 @@ module "terraformy_existing" {
     existing_security_group = [var.existing_security_group_id] # Note it will use whatever security group if provided/created
 
     #ECS
-    ecs_container = ["EC2"] # Choices are EC2 or FARGATE. Leave blank if no ECS cluster is desired
+    ecs_type = ["EC2"] # Choices are EC2 or FARGATE. Leave blank if no ECS cluster is desired
     #There are many values used by the ECS which can be set
 #     app_port                  = 8080
 #     secure_port               = 443

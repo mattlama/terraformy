@@ -22,7 +22,7 @@ module "terraformy_new" {
     existing_security_group = [var.existing_security_group_id] # Note it will use whatever security group if provided/created
 
     #ECS
-    ecs_container   = ["EC2"] 
+    ecs_type   = ["EC2"] 
 
     #IAM User
     create_iam_user = true # Will create an iam user called app_name-devops which will have access to the ecs cluster created and the ecr repo created

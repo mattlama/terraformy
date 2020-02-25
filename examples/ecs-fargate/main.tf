@@ -22,7 +22,7 @@ module "terraformy_existing" {
     existing_security_group = [var.existing_security_group_id] # Note it will use whatever security group if provided/created
 
     #ECS
-    ecs_container  = ["FARGATE"] # Choices are EC2 or FARGATE. Leave blank if no ECS cluster is desired
+    ecs_type  = ["FARGATE"] # Choices are EC2 or FARGATE. Leave blank if no ECS cluster is desired
     create_alb     = true # NOTE Currently the FARGATE cluster is tied to the alb so we must set this to true for now
     create_route53 = true # If we are creating an alb already we might as well create route53 entries for it as well
     domain         = var.domain # Need to know what domain to associate the routes with
