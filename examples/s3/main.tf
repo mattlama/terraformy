@@ -23,7 +23,7 @@ module "terraformy_existing" {
     #S3 
     # We want to use an existing bucket
     existing_s3_bucket = [var.existing_s3_bucket]
-    # Objects are map with bucket, key, and filepath as values. if bucket is a blank string ("") is will use the bucket we just referenced
+    # Objects are map with bucket, key, and filepath as values. if bucket is a blank string ("") it will use the bucket we just referenced
     s3_objects = [{
         "bucket"   = "",
         "key"      = "test/testfile",
@@ -36,7 +36,7 @@ module "terraformy_existing" {
     }]
 }
 
-# Example create new VPC
+# Example create new S3 bucket
 module "terraformy_new" {
     source     = "../../../terraformy"
     app_name   = "${var.app_name}-old"
@@ -55,7 +55,7 @@ module "terraformy_new" {
     #S3 
     # We want to create a new bucket
     create_s3_bucket = true # this will attempt to create a bucket called app_name-guid 
-    # Objects are map with bucket, key, and filepath as values. if bucket is a blank string ("") is will use the bucket we just referenced
+    # Objects are map with bucket, key, and filepath as values. if bucket is a blank string ("") it will use the bucket we just referenced
     # This example will add our test file to the bucket we just made and the existing bucket
     s3_objects = [{
         "bucket"   = "",

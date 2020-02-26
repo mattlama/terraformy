@@ -49,7 +49,7 @@ egress_cidr_blocks
 An example of Security Group creation can be found [here](https://github.com/mattlama/terraformy/tree/master/examples/security-groups)
 
 #### ECS Cluster
-ECS creation still needs more work done to it. Currently it works by setting `ecs_type` to either "FARGATE" or "EC2" and it will attempt to create a cluster using the VPC and Security Groups used above. If no VPC was provided than no ECS cluster will be created
+ECS creation still needs more work done to it. Currently it works by setting `ecs_type` to either "FARGATE" or "EC2" and it will attempt to create a cluster using the VPC and Security Groups used above. If no VPC was provided then no ECS cluster will be created
 ```
 ecs_type = [] # Default. Will not create a cluster
 ecs_type = ["EC2"] # Creates an EC2 cluster
@@ -57,6 +57,30 @@ ecs_type = ["FARGATE"] # Creates a FARGATE cluster
 # There are many fields which can be set and they are likely to change before long so see examples for customizable fields
 ```
 Examples of ECS creation can be found for [FARGATE here](https://github.com/mattlama/terraformy/tree/master/examples/ecs-fargate) and [EC2 here](https://github.com/mattlama/terraformy/tree/master/examples/ecs-ec2).
+
+#### SSM Parameter store
+SSP Parameter store generation works by populating the `parameters` map with 4 required values for each parameter: `name`, `description`, `type` and `value`.  A number of different ways to set `parameters` are supported including a technique for hiding sensitive values.
+Examples of SSM Parameter store creation can be found [here](https://github.com/mattlama/terraformy/tree/master/examples/parameter-store).
+
+#### S3
+S3 buckets can be created and files added to new or existing buckets easily.  The key actions are `existing_3s_bucket` or `create_s3_bucket` indicating
+whether resources are added to an existing or new bucket respectively.
+```
+create_s3_bucket = true
+s3_objects = [{
+    "bucket" = "",
+    "key" = "test/testfile-x",
+    "filepath" = "./testfile-x.txt"
+}]
+existing_s3_bucket = [var.existing_s3_bucket]
+s3_objects = [{
+    "bucket" = "", # empty string indicates the referenced bucket is to be used
+    "key" = "test/testfile-y",
+    "filepath" = "./testfile-y.txt"
+}]
+```
+Examples of S3 can be found [here](https://github.com/mattlama/terraformy/tree/master/examples/s3).
+
 
 TODOs
 - Reorganize variables to make things easier to find
