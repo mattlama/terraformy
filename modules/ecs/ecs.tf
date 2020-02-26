@@ -95,6 +95,7 @@ resource "aws_ecs_service" "main" {
     }
   }
 
+  # Load Balancer only needs to exist when 'awsvpc' is the value of the ecs_task_role.network_mode
   dynamic "load_balancer" {
     for_each = var.is_web_facing ? [""] : []
     content {
@@ -103,24 +104,13 @@ resource "aws_ecs_service" "main" {
       container_port   = var.app_port
     }
   }
+
+  lifecycle {
+    ignore_changes = ["desired_count", "task_definition"]
+  }
   
-  depends_on = [var.alb_listener, var.role_policy_attachment]
+  depends_on = var.is_web_facing ? [var.alb_listener, var.role_policy_attachment]: [var.role_policy_attachment]
 }
-
-# resource "aws_ecs_service" "main_ec2" {
-#   count           = var.create ? (var.is_ec2 ? length(var.environments): 0) : 0 
-#   name            = "${var.app_name}-${var.environments[count.index]}"
-#   cluster         = aws_ecs_cluster.main[0].id
-#   task_definition = aws_ecs_task_definition.app[0].arn
-#   desired_count   = var.container_count
-#   launch_type     = var.ecs_type[0]
-
-#   network_configuration {
-#     security_groups  = [var.security_group_id]
-#     subnets          = var.public_subnets
-#   }
-# }
-
 
 data "aws_ami" "ecs" {
   count       = var.create ? (var.is_ec2 ? 1 : 0) : 0

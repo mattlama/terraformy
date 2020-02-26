@@ -18,6 +18,8 @@ module "alb" {
   # TODO: Create new data cert is not implemented
   certificate_arn       = var.existing_certificate_arn[0]
   domain                = var.domain
+  add_cpu_policies      = var.asg_add_cpu_policies
+  add_asg_policies      = var.asg_add_asg_policies
 
   target_groups         = var.ecs_type[0] == "FARGATE" ? [
     for e in var.environments:

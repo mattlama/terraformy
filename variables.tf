@@ -423,6 +423,16 @@ variable "domain" {
   default     = ""
 }
 
+variable "asg_add_cpu_policies" {
+  description = "Whether we want to add cloudwatch alarms for cpu high/low when creating our autoscaling group"
+  default     = true
+}
+
+variable "asg_add_asg_policies" {
+  description = "Whether we want to add autoscaling policies for scaling up/down when creating our autoscaling group"
+  default     = true
+}
+
 
 #Route53
 variable "create_route53" {
