@@ -22,7 +22,8 @@ module "terraformy_new" {
     create_lambda             = true            # Toggles whether or not to create the lambda function
     lambda_cloudwatch_logging = true            # Adds cloudwatch logging to the lambda alias
     alias_name                = ["test"]        # In the current version an alias will not get created without cloudwatch logging as that is the only element which uses an alias
-    lambda_s3_key             = "test/file.txt" # The location of the build file 
+    lambda_s3_key             = "test/file.txt" # The location of the build file. Need to reference the S3 bucket
+    lambda_s3_bucket          = [var.bucket_name]
     #Optional fields
 #     environments              = ["dev", "qa", "prod"]
 #     lambda_cloudwatch_logging_retention_in_days = 14 # How long to retain cloudwatch logs

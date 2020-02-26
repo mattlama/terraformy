@@ -26,3 +26,6 @@ variable "profile" {
     default     = "testing"
 }
 
+variable "bucket_name" {
+    description = "The S3 bucket our lambda function build file is in. If you want to upload the build file this can be done via the S3 example"
+}
