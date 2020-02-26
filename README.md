@@ -85,6 +85,4 @@ Examples of S3 can be found [here](https://github.com/mattlama/terraformy/tree/m
 TODOs
 - Reorganize variables to make things easier to find
 - Allow more control over the number of created resources (It is limited to 1 in many cases now)
-- Add mapping to prevent multiple lists being required to be in sync
 - Add in 'use existing' functionality where missing
-- Split up ECS creation so that web services are independent of ecs type

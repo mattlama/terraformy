@@ -58,7 +58,7 @@ module "ecs_cluster" {
   # TODO refactor to allow for more customization in each environment
   app_name                  = var.app_name
   ecs_type                  = var.ecs_type
-  create                    = length(var.ecs_type) > 0 ? ((length(var.existing_vpcs) == 0 || var.existing_vpcs[0] != "")? true : false): false
+  create                    = length(var.ecs_type) > 0 ? (length(var.existing_vpcs) == 0 ? true : (var.existing_vpcs[0] != "" ? true: false)): false
   app_port                  = var.app_port
   secure_port               = var.secure_port
   aws_region                = var.aws_region

@@ -17,3 +17,11 @@ output "security_group_id" {
 output "ecs_cluster_name" {
     value = module.ecs_cluster.ecs_cluster_name
 }
+
+output "ecr_repository_arn" {
+    value = module.ecs_cluster.ecr_repository_arn
+}
+
+output "route53_entries" {
+    value = module.routes.route53_entries
+}
