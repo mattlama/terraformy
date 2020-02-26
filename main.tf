@@ -1,7 +1,7 @@
 #ALB
 module "alb" {
   source = "./modules/alb"
-  create_alb            = var.create_alb
+  create_alb            = (var.ecs_is_web_facing) ? true: var.create_alb
   environments          = var.environments
   public_subnets        = module.vpc.vpc_public_subents
   app_name              = var.app_name
@@ -74,7 +74,8 @@ module "ecs_cluster" {
   target_group_arns         = module.alb.target_group_arns
   alb_listener              = module.alb.alb_listener
   role_policy_attachment    = module.ecs_iam_role.iam_role_policy_attachment
-  network_mode              = var.network_mode
+  network_mode              = var.ecs_is_web_facing ? "bridge": "awsvpc"
+  is_web_facing             = var.ecs_is_web_facing
   # Existing ECS Cluster
 
 }
@@ -165,7 +166,7 @@ module "parameters" {
 #Routes
 module "routes" {
   source = "./modules/routes"
-  create_route53            = var.create_route53 ? (var.domain == "" ? false : true): false
+  create_route53            = var.ecs_is_web_facing ? (var.domain == "" ? false : true): (var.create_route53 ? (var.domain == "" ? false : true): false)
   # Route53 route is environment-app_name-domain
   environments              = var.environments
   app_name                  = var.app_name
@@ -210,11 +211,15 @@ module "security_group" {
   owners                  = var.owners
   projects                = var.projects
   # Pass in a list of maps with fields mapped. 1 map = 1 security group to create. This way custom security groups can be set up for each environment
-  security_groups_to_create = (length(var.existing_vpcs) == 0 || var.existing_vpcs[0] != "") ? [{
+  security_groups_to_create = (length(var.existing_vpcs) == 0) ? [{
     "ingress_rules" = var.ingress_rules,
     "ingress_cidr_blocks" = var.ingress_cidr_blocks,
     "egress_rules" = var.egress_rules,
-    "egress_cidr_blocks" = var.egress_cidr_blocks}]: []
+    "egress_cidr_blocks" = var.egress_cidr_blocks}]: (var.existing_vpcs[0] != "" ? [{
+    "ingress_rules" = var.ingress_rules,
+    "ingress_cidr_blocks" = var.ingress_cidr_blocks,
+    "egress_rules" = var.egress_rules,
+    "egress_cidr_blocks" = var.egress_cidr_blocks}]:[])
 }
 
 #VPC

@@ -23,8 +23,9 @@ module "terraformy_existing" {
 
     #ECS
     ecs_type  = ["FARGATE"] # Choices are EC2 or FARGATE. Leave blank if no ECS cluster is desired
-    create_alb     = true # NOTE Currently the FARGATE cluster is tied to the alb so we must set this to true for now
-    create_route53 = true # If we are creating an alb already we might as well create route53 entries for it as well
+    ecs_is_web_facing = true
+    # create_alb     = true # Currently this will force a creation of an alb. There is a value ecs_is_web_facing which will do both alb and route53 entry
+    # create_route53 = true # If we are creating an alb already we might as well create route53 entries for it as well
     domain         = var.domain # Need to know what domain to associate the routes with
     # Set existing_private_zone to true if the route53 zone our domain is hosted at is private
     
@@ -69,15 +70,17 @@ module "terraformy_existing" {
 # cloudwatch alarm low cpu (1 for each environment)
 # iam role autoscaling (1)
 # iam role autoscaling policy attachment (1)
-# iam role instance (1)
-# iam role instance policy attachment (1)
-# autoscaling group (1)
 # ecr repository (1)
 # ecs cluster (1)
 # ecs service (1 for each environment)
 # task definition (1)
-# iam instance profile (1)
-# instance launch configuration (1)
 # iam role task (1)
 # iam role task policy attachment (1)
-# For a total of 3 + 3 + 3 + 3 + 3 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 3 + 1 + 1 + 1 + 1 + 1 = 30 components created in our example
+# For a total of 3 + 3 + 3 + 3 + 3 + 1 + 1 + 1 + 1 + 3 + 1 + 1 + 1 = 25 components created in our example
+# Adding in an alb and route53 entries will add the following
+# alb listener (1)
+# alb listener rule (1 for each environment)
+# route53 recorn (1 for each environment)
+# alb (1)
+# alb target group (1 for each environment)
+# For a total of 25 + 1 + 3 + 3 + 1 + 3 = 36 components when our example adds in alb and route53 entries

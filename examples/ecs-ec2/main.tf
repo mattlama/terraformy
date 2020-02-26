@@ -23,6 +23,8 @@ module "terraformy_new" {
 
     #ECS
     ecs_type = ["EC2"] # Choices are EC2 or FARGATE. Leave blank if no ECS cluster is desired
+    ecs_is_web_facing = true
+    domain            = var.domain
     #There are many values used by the ECS which can be set
 #     app_port                  = 8080
 #     secure_port               = 443
@@ -76,3 +78,10 @@ module "terraformy_new" {
 # iam role task (1)
 # iam role task policy attachment (1)
 # For a total of 3 + 3 + 3 + 3 + 3 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 3 + 1 + 1 + 1 + 1 + 1 = 30 components created in our example
+# If we want to add web facing portions of this we would add the following:
+# alb listener (1)
+# alb listener rule (1 for each environment)
+# alb (1)
+# alb target groups (1 for each environment)
+# route53 routes (1 for each environment)
+# For a total of 30 + 1 + 3 + 1 + 3 + 3 = 41 components

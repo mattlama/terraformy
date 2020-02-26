@@ -108,3 +108,7 @@ variable "role_policy_attachment" {
 variable "network_mode" {
   description = "The network type the task definition will use"
 }
+
+variable "is_web_facing" {
+  description = "Whether or not to create the alb and route53 entries with the ecs cluster"
+}

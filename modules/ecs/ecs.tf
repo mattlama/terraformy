@@ -17,7 +17,7 @@ data "template_file" "ecs" {
   {
     "name": "${var.app_name}-app",
     "image": "${aws_ecr_repository.repo[0].repository_url}",
-    "networkMode": "awsvpc",
+    "networkMode": ${var.network_mode},
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -38,7 +38,7 @@ data "template_file" "ecs" {
     ]
   }
 ]
-EOF 
+EOF
 ): <<EOF
 [
   {
@@ -46,7 +46,7 @@ EOF
     "image": "${aws_ecr_repository.repo[0].repository_url}",
     "cpu": ${var.fargate_cpu},
     "memory": ${var.fargate_memory},
-    "networkMode": "awsvpc",
+    "networkMode": ${var.network_mode},
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -64,19 +64,6 @@ EOF
   }
 ]
 EOF
-  # vars = var.is_ec2 ? {
-  #   app_name       = var.app_name
-  #   app_image      = aws_ecr_repository.repo[0].repository_url
-  #   app_port       = var.app_port
-  #   aws_region     = "${var.aws_region}"
-  # } : {
-  #   app_name       = var.app_name
-  #   app_image      = aws_ecr_repository.repo[0].repository_url
-  #   app_port       = var.app_port
-  #   fargate_cpu    = var.fargate_cpu
-  #   fargate_memory = var.fargate_memory
-  #   aws_region     = "${var.aws_region}"
-  # }
 }
 
 resource "aws_ecs_task_definition" "app" {
@@ -90,8 +77,8 @@ resource "aws_ecs_task_definition" "app" {
   container_definitions    = data.template_file.ecs[0].rendered
 }
 
-resource "aws_ecs_service" "main_fargate" {
-  count           = var.create ? (var.is_ec2 ? 0 : length(var.environments)) : 0 
+resource "aws_ecs_service" "main" {
+  count           = var.create ? length(var.environments) : 0 
   name            = "${var.app_name}-${var.environments[count.index]}"
   cluster         = aws_ecs_cluster.main[0].id
   task_definition = aws_ecs_task_definition.app[0].arn
@@ -99,35 +86,40 @@ resource "aws_ecs_service" "main_fargate" {
   launch_type     = var.ecs_type[0]
 
   # Network configuration only needs to exist when 'awsvpc' is the value of the ecs_task_role.network_mode
-  network_configuration {
-    security_groups  = [var.security_group_id]
-    subnets          = var.public_subnets
-    assign_public_ip = true
-  }
-  # TODO bring these services together. Make load_balancer conditional on something other than service type
-  load_balancer {
-    target_group_arn = var.target_group_arns[count.index]
-    container_name   = "${var.app_name}-app"
-    container_port   = var.app_port
+  dynamic "network_configuration" {
+    for_each = var.is_web_facing ? [""] : [] # If web facing create the network configuration block
+    content {
+      security_groups  = [var.security_group_id]
+      subnets          = var.public_subnets
+      assign_public_ip = true
+    }
   }
 
-
+  dynamic "load_balancer" {
+    for_each = var.is_web_facing ? [""] : []
+    content {
+      target_group_arn = var.target_group_arns[count.index]
+      container_name   = "${var.app_name}-app"
+      container_port   = var.app_port
+    }
+  }
+  
   depends_on = [var.alb_listener, var.role_policy_attachment]
 }
 
-resource "aws_ecs_service" "main_ec2" {
-  count           = var.create ? (var.is_ec2 ? length(var.environments): 0) : 0 
-  name            = "${var.app_name}-${var.environments[count.index]}"
-  cluster         = aws_ecs_cluster.main[0].id
-  task_definition = aws_ecs_task_definition.app[0].arn
-  desired_count   = var.container_count
-  launch_type     = var.ecs_type[0]
+# resource "aws_ecs_service" "main_ec2" {
+#   count           = var.create ? (var.is_ec2 ? length(var.environments): 0) : 0 
+#   name            = "${var.app_name}-${var.environments[count.index]}"
+#   cluster         = aws_ecs_cluster.main[0].id
+#   task_definition = aws_ecs_task_definition.app[0].arn
+#   desired_count   = var.container_count
+#   launch_type     = var.ecs_type[0]
 
-  network_configuration {
-    security_groups  = [var.security_group_id]
-    subnets          = var.public_subnets
-  }
-}
+#   network_configuration {
+#     security_groups  = [var.security_group_id]
+#     subnets          = var.public_subnets
+#   }
+# }
 
 
 data "aws_ami" "ecs" {

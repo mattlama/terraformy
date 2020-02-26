@@ -1,5 +1,7 @@
 variable "app_name" {
   description = "Required. This is the app name which will be used in the creation of all components in this outline. NOTE AWS has limitations on certain components such as 32 characters in length or must be all lowercase for ecr repositories"
+  # Rules about app name. ECR repository has a limit of 32 characters and must be all lower case. ALB requires no underscores.
+  # Ideally the name is less than 20 characters, all lowercase, and no underscores
 }
 
 variable "existing_vpcs" {
@@ -192,9 +194,14 @@ variable "ec2_existing_iam_role" {
   default     = []
 }
 
-variable "network_mode" {
-  description = "The network type the task definition will use"
-  default     = "awsvpc"
+# variable "network_mode" {
+#   description = "The network type the task definition will use"
+#   default     = "bridge"
+# }
+
+variable "ecs_is_web_facing" {
+  description = "Whether or not to create alb and route53 entries for the ecs cluster"
+  default     = false
 }
 
 # ASG

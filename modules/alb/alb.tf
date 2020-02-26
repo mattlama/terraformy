@@ -34,7 +34,7 @@ resource "aws_alb_listener" "front_end" {
   }
 }
 
-resource "aws_lb_listener_rule" "redirect-to-qa" {
+resource "aws_lb_listener_rule" "redirect-to-env" {
   count        = var.create_alb ? length(var.environments): 0
   listener_arn = "${aws_alb_listener.front_end[0].arn}"
 
