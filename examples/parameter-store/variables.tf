@@ -49,9 +49,16 @@ variable "parameter_values" {
 
 variable "parameter_maps" {
     description = "Alternative method of creating parameters which does not rely on keeping 4 separate list up to date"
-    default     = [{"name" = "/First/message", "description" = "Dev", "type" = "String", "value" = "password"},
-    {"name" = "/Second/message", "description" = "Qa", "type" = "String", "value" ="password1"},
-    {"name" = "/Third/message", "description" = "Prod", "type" = "SecureString", "value" ="Keep values in terraform.tfvars and add it to .gitignore to keep secure values off git"},]
+    default     = [{"name" = "/First/message1", "description" = "Dev", "type" = "String", "value" = "password"},
+    {"name" = "/Second/message1", "description" = "Qa", "type" = "String", "value" ="password1"},
+    {"name" = "/Third/message1", "description" = "Prod", "type" = "SecureString", "value" ="Keep values in terraform.tfvars and add it to .gitignore to keep secure values off git"},]
+}
+
+variable "parameter_maps_hidden" {
+    description = "Alternative method of creating parameters which does not rely on keeping 4 separate list up to date"
+    default     = [{"name" = "/First/message2", "description" = "Dev", "type" = "String", "value" = "Duck"},
+    {"name" = "/Second/message2", "description" = "Qa", "type" = "String", "value" ="Duck"},
+    {"name" = "/Third/message2", "description" = "Prod", "type" = "SecureString", "value" =""},]
 }
 
 variable "hidden_values" {

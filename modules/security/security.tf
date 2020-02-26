@@ -10,10 +10,10 @@ module "security_group" {
   # for_each support is coming for modules. Will replace _count with count.index
   name                = length(var.security_groups_to_create) > 0 ? "${var.app_name}_SecurityGroup_X" : "${var.app_name}_SecurityGroup"
   vpc_id              = var.vpc_id
-  ingress_rules       = lookup(var.security_groups_to_create[0], "ingress_rules", "unable to find ingress rules")
-  ingress_cidr_blocks = lookup(var.security_groups_to_create[0], "ingress_cidr_blocks", "unable to find ingress cidr blocks")
-  egress_rules        = lookup(var.security_groups_to_create[0], "egress_rules", "unable to find egress rules")
-  egress_cidr_blocks  = lookup(var.security_groups_to_create[0], "egress_cidr_blocks", "unable to find egress cidr blocks")
+  ingress_rules       = length(var.security_groups_to_create) > 0 ? (lookup(var.security_groups_to_create[0], "ingress_rules", [])) : []
+  ingress_cidr_blocks = length(var.security_groups_to_create) > 0 ? (lookup(var.security_groups_to_create[0], "ingress_cidr_blocks", [])) : []
+  egress_rules        = length(var.security_groups_to_create) > 0 ? (lookup(var.security_groups_to_create[0], "egress_rules", [])) : []
+  egress_cidr_blocks  = length(var.security_groups_to_create) > 0 ? (lookup(var.security_groups_to_create[0], "egress_cidr_blocks", [])) : []
 
   tags = {
     Terraform   = "true"

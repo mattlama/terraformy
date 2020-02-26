@@ -109,7 +109,7 @@ resource "aws_ecs_service" "main" {
     ignore_changes = ["desired_count", "task_definition"]
   }
   
-  depends_on = var.is_web_facing ? [var.alb_listener, var.role_policy_attachment]: [var.role_policy_attachment]
+  depends_on = [var.alb_listener, var.role_policy_attachment]
 }
 
 data "aws_ami" "ecs" {

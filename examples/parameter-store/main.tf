@@ -34,7 +34,7 @@ module "terraformy_new" {
     projects = ["Test-Project"]
 
     #VPC
-    existing_vpcs = [var.existing_vpc_id] # We are not using it here but the current module requires a vpc to be given
+    existing_vpcs = [""] # We are not using it here so give a blank string
 
     # Note by default security group will attempt to get created. To prevent this add a blank id to existing security group
     existing_security_group = [""]
@@ -44,17 +44,59 @@ module "terraformy_new" {
     # This example requires the same number of fields for each list
     parameters = [
         for p in var.parameter_names:
-        {"name"      = p,
-        "description"= element(var.parameter_descriptions, index(var.parameter_names, p)),
-        "type"       = element(var.parameter_types, index(var.parameter_names, p)),
-        "value"      = element(var.parameter_values, index(var.parameter_names, p))}]
+        {
+            "name"      = p,
+            "description"= element(var.parameter_descriptions, index(var.parameter_names, p)),
+            "type"       = element(var.parameter_types, index(var.parameter_names, p)),
+            "value"      = element(var.parameter_values, index(var.parameter_names, p))
+        }
+    ]
 
+}
+
+# Example create new Parameters from a map
+module "terraformy_new_maps" {
+    source     = "../../../terraformy"
+    app_name   = "${var.app_name}-new"
+    aws_region = var.aws_region
+    #Tags
+    owners   = ["Test"]
+    projects = ["Test-Project"]
+
+    #VPC
+    existing_vpcs = [""] # We are not using it here so give a blank string
+
+    # Note by default security group will attempt to get created. To prevent this add a blank id to existing security group
+    existing_security_group = [""]
+
+    # There are a couple ways of populating these values but the gist is we need 4 fields populated. 
     # This example just takes the maps and uses them. You can look in variaables.tf to see how that slice map is set up
-    # parameters = var.parameter_maps
+    parameters = var.parameter_maps
+}
 
-    # This example take the maps and just sets their values. It gets the values from a hidden tfvars file
-    # parameters = [
-    #     for m in var.parameter_maps:
-    #     m["value"] = element(var.hidden_values, index(var.parameter_maps, m))
-    # ]
+# Example create new Parameters from a map
+module "terraformy_new_maps_hidden" {
+    source     = "../../../terraformy"
+    app_name   = "${var.app_name}-new"
+    aws_region = var.aws_region
+    #Tags
+    owners   = ["Test"]
+    projects = ["Test-Project"]
+
+    #VPC
+    existing_vpcs = [""] # We are not using it here so give a blank string
+
+    # Note by default security group will attempt to get created. To prevent this add a blank id to existing security group
+    existing_security_group = [""]
+
+    # This example take the map from the previous example and if the value for it is blank it will read the value from the hidden values found in a tfvars file
+    parameters = [
+        for m in var.parameter_maps_hidden:
+        {
+            "name"        = m["name"],
+            "description" = m["description"],
+            "type"        = m["type"],
+            "value"       = (m["value"] == "") ? element(var.hidden_values, index(var.parameter_maps_hidden, m)): m["value"]
+        }
+    ]
 }

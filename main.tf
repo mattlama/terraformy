@@ -18,16 +18,14 @@ module "alb" {
   # TODO: Create new data cert is not implemented
   certificate_arn       = var.existing_certificate_arn[0]
   domain                = var.domain
-  add_cpu_policies      = var.asg_add_cpu_policies
-  add_asg_policies      = var.asg_add_asg_policies
 
-  target_groups         = var.ecs_type[0] == "FARGATE" ? [
+  target_groups         = length(var.ecs_type) > 0 ? (var.ecs_type[0] == "FARGATE" ? [
     for e in var.environments:
     map("name", "${e}-${var.app_name}-tg", "backend_protocol", "HTTP", "backend_port", "${var.app_port}", "target_type", "ip", "health_check_path", "/healthcheck")
   ] : [
     for e in var.environments:
     map("name", "${e}-${var.app_name}-tg", "backend_protocol", "HTTP", "backend_port", "${var.app_port}", "health_check_path", "/healthcheck")
-  ]
+  ]) : []
 }
 
 #ASG
@@ -40,6 +38,8 @@ module "asg" {
   auto_scaling_role_iam_arn = length(var.asg_existing_iam_role) > 0 ? var.asg_existing_iam_role[0]: module.asg_iam_role.iam_role_arn
   asg_min_capacity          = var.asg_min_size
   asg_max_capacity          = var.asg_max_size
+  add_cpu_policies      = var.asg_add_cpu_policies
+  add_asg_policies      = var.asg_add_asg_policies
 }
 
 module "asg_iam_role" {
