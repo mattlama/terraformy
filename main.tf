@@ -19,10 +19,13 @@ module "alb" {
   certificate_arn       = var.existing_certificate_arn[0]
   domain                = var.domain
 
-  target_groups         = [
+  target_groups         = var.ecs_type[0] == "FARGATE" ? [
     for e in var.environments:
     map("name", "${e}-${var.app_name}-tg", "backend_protocol", "HTTP", "backend_port", "${var.app_port}", "target_type", "ip", "health_check_path", "/healthcheck")
-  ]  
+  ] : [
+    for e in var.environments:
+    map("name", "${e}-${var.app_name}-tg", "backend_protocol", "HTTP", "backend_port", "${var.app_port}", "health_check_path", "/healthcheck")
+  ]
 }
 
 #ASG
