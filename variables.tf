@@ -98,6 +98,62 @@ variable "egress_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "security_group_rules_to_create" {
+  description = "A slice of maps which contains the fields 'ingress_rules' and 'egress_rules'. Both of which are maps which contain the fields 'from_port', 'to_port', 'protocol', and 'cidr_blocks'"
+  default     = [
+  {
+    "ingress_rules" = [{
+      "from_port" = 80,
+      "to_port" = 80,
+      "protocol" = "tcp",
+      "cidr_blocks" = ["0.0.0.0/0"],
+      "description" = "HTTP"
+    },
+    {
+      "from_port" = 8080,
+      "to_port" = 8080,
+      "protocol" = "tcp",
+      "cidr_blocks" = ["0.0.0.0/0"],
+      "description" = "HTTP"
+    },
+    {
+      "from_port" = 443,
+      "to_port" = 443,
+      "protocol" = "tcp",
+      "cidr_blocks" = ["0.0.0.0/0"],
+      "description" = "HTTPS"
+    }],
+    "egress_rules" = [{
+      "from_port" = 80,
+      "to_port" = 80,
+      "protocol" = "tcp",
+      "cidr_blocks" = ["0.0.0.0/0"],
+      "description" = "HTTP"
+    },
+    {
+      "from_port" = 8080,
+      "to_port" = 8080,
+      "protocol" = "tcp",
+      "cidr_blocks" = ["0.0.0.0/0"],
+      "description" = "HTTP"
+    },
+    {
+      "from_port" = 443,
+      "to_port" = 443,
+      "protocol" = "tcp",
+      "cidr_blocks" = ["0.0.0.0/0"],
+      "description" = "HTTPS"
+    },
+    {
+      "from_port" = 1433,
+      "to_port" = 1433,
+      "protocol" = "tcp",
+      "cidr_blocks" = ["0.0.0.0/0"],
+      "description" = "MSSQL Server"
+    }]
+  }]
+}
+
 #ECS-EC2
 variable "ecs_type" {
   description = "Assign a value here and the script will generate an ecs cluster for each element added. Values should be 'FARGATE' or 'EC2'"

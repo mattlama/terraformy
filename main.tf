@@ -216,15 +216,16 @@ module "security_group" {
   owners                  = var.owners
   projects                = var.projects
   # Pass in a list of maps with fields mapped. 1 map = 1 security group to create. This way custom security groups can be set up for each environment
-  security_groups_to_create = (length(var.existing_vpcs) == 0) ? [{
-    "ingress_rules" = var.ingress_rules,
-    "ingress_cidr_blocks" = var.ingress_cidr_blocks,
-    "egress_rules" = var.egress_rules,
-    "egress_cidr_blocks" = var.egress_cidr_blocks}]: (var.existing_vpcs[0] != "" ? [{
-    "ingress_rules" = var.ingress_rules,
-    "ingress_cidr_blocks" = var.ingress_cidr_blocks,
-    "egress_rules" = var.egress_rules,
-    "egress_cidr_blocks" = var.egress_cidr_blocks}]:[])
+  # security_groups_to_create = (length(var.existing_vpcs) == 0) ? [{
+  #   "ingress_rules" = var.ingress_rules,
+  #   "ingress_cidr_blocks" = var.ingress_cidr_blocks,
+  #   "egress_rules" = var.egress_rules,
+  #   "egress_cidr_blocks" = var.egress_cidr_blocks}]: (var.existing_vpcs[0] != "" ? [{
+  #   "ingress_rules" = var.ingress_rules,
+  #   "ingress_cidr_blocks" = var.ingress_cidr_blocks,
+  #   "egress_rules" = var.egress_rules,
+  #   "egress_cidr_blocks" = var.egress_cidr_blocks}]:[])
+  security_groups_to_create = var.security_group_rules_to_create
 }
 
 #VPC
