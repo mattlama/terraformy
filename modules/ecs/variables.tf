@@ -20,10 +20,6 @@ variable "app_port" {
   description = "Required if creating a new ECS cluster. This is the port traffic for this ecs cluster will use"
 }
 
-variable "secure_port" {
-  description = "Required if using secure web traffic"
-}
-
 variable "aws_region" {
   description = "Required if creating a new ECS cluster. This is the region the ECS cluster will live in"
 }

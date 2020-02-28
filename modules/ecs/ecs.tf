@@ -10,9 +10,8 @@ resource "aws_ecr_repository" "repo" {
 
 data "template_file" "ecs" {
   count    = var.create ? 1 : 0
-  # template = var.is_ec2 ? file("./modules/templates/ecs-ec2.json.tpl"): file("./modules/templates/ecs-fargate.json.tpl")
   # TODO Improve data templates. Network_mode should be awsvpc in the case of an alb and bridge when not
-  template = var.is_ec2 ? (<<EOF
+  template = !var.is_web_facing ? (<<EOF
 [
   {
     "name": "${var.app_name}-app",
