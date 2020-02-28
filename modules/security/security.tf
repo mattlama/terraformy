@@ -33,22 +33,22 @@ resource "aws_security_group" "current" {
   dynamic "ingress" {
     for_each = lookup(var.security_groups_to_create[count.index], "ingress_rules", [])
     content {
-      from_port   = ingress.value["from_port"]
-      to_port     = ingress.value["to_port"]
-      protocol    = ingress.value["protocol"]
+      from_port   = ingress.value["port"]
+      to_port     = ingress.value["port"]
+      protocol    = "tcp"
       cidr_blocks = ingress.value["cidr_blocks"]
-      description = ingress.value["description"]
+      description = ingress.value["port"] == 443 ? "HTTPS": (ingress.value["port"] == 1433 ? "MSSQL Server" : "HTTP" )
     }
   }
 
   dynamic "egress" {
     for_each = lookup(var.security_groups_to_create[count.index], "egress_rules", [])
     content {
-      from_port   = egress.value["from_port"]
-      to_port     = egress.value["to_port"]
-      protocol    = egress.value["protocol"]
+      from_port   = egress.value["port"]
+      to_port     = egress.value["port"]
+      protocol    = "tcp"
       cidr_blocks = egress.value["cidr_blocks"]
-      description = egress.value["description"]
+      description = egress.value["port"] == 443 ? "HTTPS": (egress.value["port"] == 1433 ? "MSSQL Server" : "HTTP" )
     }
   }
 

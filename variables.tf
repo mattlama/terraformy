@@ -99,57 +99,37 @@ variable "egress_cidr_blocks" {
 }
 
 variable "security_group_rules_to_create" {
-  description = "A slice of maps which contains the fields 'ingress_rules' and 'egress_rules'. Both of which are maps which contain the fields 'from_port', 'to_port', 'protocol', and 'cidr_blocks'"
+  description = "A slice of maps which contains the fields 'ingress_rules' and 'egress_rules'. Both of which are maps which contain the fields 'port', and 'cidr_blocks'"
+  # NOTE port gets mapped to from_port and to_port so this currently cannot accept a range of ports
   default     = [
   {
     "ingress_rules" = [{
-      "from_port" = 80,
-      "to_port" = 80,
-      "protocol" = "tcp",
-      "cidr_blocks" = ["0.0.0.0/0"],
-      "description" = "HTTP"
+      "port" = 80,
+      "cidr_blocks" = ["0.0.0.0/0"]
     },
     {
-      "from_port" = 8080,
-      "to_port" = 8080,
-      "protocol" = "tcp",
-      "cidr_blocks" = ["0.0.0.0/0"],
-      "description" = "HTTP"
+      "port" = 8080,
+      "cidr_blocks" = ["0.0.0.0/0"]
     },
     {
-      "from_port" = 443,
-      "to_port" = 443,
-      "protocol" = "tcp",
-      "cidr_blocks" = ["0.0.0.0/0"],
-      "description" = "HTTPS"
+      "port" = 443,
+      "cidr_blocks" = ["0.0.0.0/0"]
     }],
     "egress_rules" = [{
-      "from_port" = 80,
-      "to_port" = 80,
-      "protocol" = "tcp",
-      "cidr_blocks" = ["0.0.0.0/0"],
-      "description" = "HTTP"
+      "port" = 80,
+      "cidr_blocks" = ["0.0.0.0/0"]
     },
     {
-      "from_port" = 8080,
-      "to_port" = 8080,
-      "protocol" = "tcp",
-      "cidr_blocks" = ["0.0.0.0/0"],
-      "description" = "HTTP"
+      "port" = 8080,
+      "cidr_blocks" = ["0.0.0.0/0"]
     },
     {
-      "from_port" = 443,
-      "to_port" = 443,
-      "protocol" = "tcp",
-      "cidr_blocks" = ["0.0.0.0/0"],
-      "description" = "HTTPS"
+      "port" = 443,
+      "cidr_blocks" = ["0.0.0.0/0"]
     },
     {
-      "from_port" = 1433,
-      "to_port" = 1433,
-      "protocol" = "tcp",
-      "cidr_blocks" = ["0.0.0.0/0"],
-      "description" = "MSSQL Server"
+      "port" = 1433,
+      "cidr_blocks" = ["0.0.0.0/0"]
     }]
   }]
 }

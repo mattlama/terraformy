@@ -35,12 +35,51 @@ module "terraformy_new" {
     existing_vpcs = [var.existing_vpc_id] # NOTE it will by default use the vpc here whether new or existing when creating a new security group
 
     #Security
-    # Note by default security group will attempt to get created. To prevent this add a blank id to existing security group
-    # The following can be set. Currently they are showing their default values
-    # ingress_rules       = ["https-443-tcp", "http-80-tcp", "http-8080-tcp"]
-    # ingress_cidr_blocks = ["0.0.0.0/0"]
-    # egress_rules        = ["https-443-tcp", "http-80-tcp", "http-8080-tcp", "mssql-tcp"]
-    # egress_cidr_blocks  = ["0.0.0.0/0"]
+    security_group_rules_to_create = [
+    {
+        "ingress_rules" = [
+            {
+                "port" = 80,
+                "cidr_blocks" = ["0.0.0.0/0", "1.1.0.0/16"]
+            },
+            {
+                "port" = 8080,
+                "cidr_blocks" = ["0.0.0.0/0"]
+            },
+            {
+                "port" = 443,
+                "cidr_blocks" = ["0.0.0.0/0", "1.1.0.0/16"]
+            }
+        ],
+        "egress_rules" = [
+            {
+                "port" = 80,
+                "cidr_blocks" = ["0.0.0.0/0", "1.1.0.0/16"]
+            },
+            {
+                "port" = 8080,
+                "cidr_blocks" = ["0.0.0.0/0"]
+            },
+            {
+                "port" = 443,
+                "cidr_blocks" = ["0.0.0.0/0", "1.1.0.0/16"]
+            },
+            {
+                "port" = 1433,
+                "cidr_blocks" = ["0.0.0.0/0"]
+            }
+        ]
+    }]
+    # This will attempt to create 3 ingress rules for our security group as well as 4 egress rules.
+    # Default ingress:
+    # port 80: 0.0.0.0/0
+    # port 8080: 0.0.0.0/0
+    # port 443: 0.0.0.0/0
+    # Default egress:
+    # port 80: 0.0.0.0/0
+    # port 8080: 0.0.0.0/0
+    # port 443: 0.0.0.0/0
+    # port 1433: 0.0.0.0/0
 }
 
 # Creating a new Security group will create the following:
