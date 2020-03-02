@@ -41,7 +41,7 @@ EOF
 ): <<EOF
 [
   {
-    "name": "${var.app_name}",
+    "name": "${var.app_name}-app",
     "image": "${aws_ecr_repository.repo[0].repository_url}",
     "cpu": ${var.fargate_cpu},
     "memory": ${var.fargate_memory},

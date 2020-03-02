@@ -42,10 +42,6 @@ variable "secure_port" {
     description = "The secure port used by our alb"
 }
 
-variable "target_groups_count" {
-    description = "The number of target groups we will be creating"
-}
-
 variable "target_groups" {
     description = "The target groups our alb will be using"
 }

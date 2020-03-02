@@ -29,6 +29,7 @@ module "terraformy_web_service" {
     domain            = var.domain # Need to know what domain to associate the routes with. Currently terraformy cannot create an aws domain
     # Set existing_private_zone to true if the route53 zone our domain is hosted at is private
 
+    existing_certificate_arn = [var.existing_certificate_arn]
 }
 
 # This will create the following AWS Components

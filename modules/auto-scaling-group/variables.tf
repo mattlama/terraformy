@@ -27,10 +27,6 @@ variable "asg_max_capacity" {
   description = "Maximum running instances in the autoscaling group"
 }
 
-variable "add_cpu_policies" {
-  description = "Whether or not to add high/low cloudwatch tracking for our asg"
-}
-
 variable "add_asg_policies" {
   description = "Whether or not to add scale up/down policies to our asg"
 }

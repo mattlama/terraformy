@@ -11,7 +11,7 @@ module "alb" {
   vpc_id              = var.vpc_id
   logging_enabled     = var.logging_enabled
   target_groups       = "${tolist(var.target_groups)}"
-  target_groups_count = var.create_alb ? var.target_groups_count :0
+  target_groups_count = var.create_alb ? length(var.target_groups) :0
   tags                = {
     Terraform   = "true"
     Application = var.app_name

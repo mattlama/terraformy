@@ -72,7 +72,6 @@ variable "reuse_nat_ips" {
 }
 
 #Security
-# TODO Expand to directly take a security group ID. This currently assumes you know the VPC and you know a security group exists but do not have the id at hand
 variable "existing_security_group" {
   description = "Leave blank to create a new security group. Otherwise it will use the VPC id to find an associated security group"
   default     = []
@@ -457,11 +456,6 @@ variable "existing_certificate_arn" {
 variable "domain" {
   description = "The domain used in creation of the alb listener rules. used in the format environment-app_name-domain"
   default     = ""
-}
-
-variable "asg_add_cpu_policies" {
-  description = "Whether we want to add cloudwatch alarms for cpu high/low when creating our autoscaling group"
-  default     = true
 }
 
 variable "asg_add_asg_policies" {

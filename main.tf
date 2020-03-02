@@ -12,7 +12,6 @@ module "alb" {
   projects              = var.projects
   ecs_port              = var.app_port
   secure_port           = var.secure_port
-  target_groups_count   = length(var.environments)
   alb_listener_protocol = var.alb_listener_protocol
   alb_ssl_policy        = var.alb_ssl_policy
   # TODO: Create new data cert is not implemented
@@ -38,7 +37,6 @@ module "asg" {
   auto_scaling_role_iam_arn = length(var.asg_existing_iam_role) > 0 ? var.asg_existing_iam_role[0]: module.asg_iam_role.iam_role_arn
   asg_min_capacity          = var.asg_min_size
   asg_max_capacity          = var.asg_max_size
-  add_cpu_policies      = var.asg_add_cpu_policies
   add_asg_policies      = var.asg_add_asg_policies
 }
 
@@ -60,7 +58,6 @@ module "ecs_cluster" {
   ecs_type                  = var.ecs_type
   create                    = length(var.ecs_type) > 0 ? (length(var.existing_vpcs) == 0 ? true : (var.existing_vpcs[0] != "" ? true: false)): false
   app_port                  = var.app_port
-  secure_port               = var.secure_port
   aws_region                = var.aws_region
   execution_role_arn        = length(var.ecs_existing_iam_role) > 0 ? var.ecs_existing_iam_role[0]: module.ecs_iam_role.iam_role_arn
   provisioned_memory        = var.provisioned_memory
@@ -79,7 +76,7 @@ module "ecs_cluster" {
   target_group_arns         = module.alb.target_group_arns
   alb_listener              = module.alb.alb_listener
   role_policy_attachment    = module.ecs_iam_role.iam_role_policy_attachment
-  network_mode              = var.ecs_is_web_facing ? "bridge": "awsvpc"
+  network_mode              = /*var.ecs_is_web_facing*/ length(var.ecs_type) > 0 ? (var.ecs_type[0] == "EC2" ? "bridge": "awsvpc"): "bridge"
   is_web_facing             = var.ecs_is_web_facing
   # Existing ECS Cluster
 

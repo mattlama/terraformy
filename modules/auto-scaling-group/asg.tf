@@ -10,6 +10,7 @@ resource "aws_appautoscaling_target" "target" {
   role_arn           = data.aws_iam_role.ecs_autoscale_role.arn #var.auto_scaling_role_iam_arn 
   min_capacity       = var.asg_min_capacity
   max_capacity       = var.asg_max_capacity
+  depends_on         = [var.ecs_cluster_name]
 }
 
 # Automatically scale capacity up by one
@@ -58,7 +59,7 @@ resource "aws_appautoscaling_policy" "down" {
 
 # CloudWatch alarm that triggers the autoscaling up policy
 resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
-  count               = var.create ? (var.add_cpu_policies ? length(var.environments): 0) : 0
+  count               = var.create ? (var.add_asg_policies ? length(var.environments): 0) : 0
   alarm_name          = "${var.app_name}_cpu_utilization_high"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
@@ -78,7 +79,7 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
 
 # CloudWatch alarm that triggers the autoscaling down policy
 resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
-  count               = var.create ? (var.add_cpu_policies ? length(var.environments): 0) : 0
+  count               = var.create ? (var.add_asg_policies ? length(var.environments): 0) : 0
   alarm_name          = "${var.app_name}_cpu_utilization_low"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "2"

@@ -21,3 +21,7 @@ variable "profile" {
 variable "domain" {
     description = "This is an existing domain we want to add our route53 entries to"
 }
+
+variable "existing_certificate_arn" {
+    description = "The arn of an existing ssl cert used in the alb listener"
+}
